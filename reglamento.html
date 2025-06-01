@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <!--test-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reglamento - La Jugada Prohibida</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #121212;
+            color: #ffffff;
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1 {
+            color: #ff5722;
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #ff5722;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #25D366;
+            margin-top: 40px;
+            border-left: 4px solid #ff5722;
+            padding-left: 10px;
+        }
+        ul {
+            padding-left: 20px;
+        }
+        li {
+            margin-bottom: 8px;
+        }
+        .ejemplo {
+            background-color: #333;
+            padding: 12px;
+            border-radius: 5px;
+            margin: 15px 0;
+            border-left: 3px solid #25D366;
+        }
+        .volver-btn {
+            display: inline-block;
+            margin: 20px 0;
+            padding: 12px 20px;
+            background: #ff5722;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+        .volver-btn:hover {
+            background: #e64a19;
+        }
+        .section {
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #333;
+        }
+        strong {
+            color: #ff5722;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="index.html" class="volver-btn">
+            <i class="fas fa-arrow-left"></i> Volver a Apuestas
+        </a>
+
+        <h1>REGLAMENTO GENERAL DE LA CASA DE APUESTAS</h1>
+
+        <div class="section">
+            <h2>1. RESULTADO FINAL (1, X, 2)</h2>
+            <p>Se apuesta al resultado final del partido:</p>
+            <ul>
+                <li><strong>1</strong> → Victoria del equipo local (Ej: Barcelona)</li>
+                <li><strong>X</strong> → Empate</li>
+                <li><strong>2</strong> → Victoria del equipo visitante (Ej: Real Madrid)</li>
+            </ul>
+            <div class="ejemplo">
+                <strong>Ejemplo:</strong><br>
+                Si apuestas al "1" en un Barcelona vs Real Madrid y el partido termina 2-1, ganas la apuesta.
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>2. DOBLE OPORTUNIDAD (1X, X2, 12)</h2>
+            <p>Permite cubrir dos de los tres posibles resultados.</p>
+            <ul>
+                <li><strong>1X</strong> → Ganas si gana Barcelona o empatan</li>
+                <li><strong>X2</strong> → Ganas si empatan o gana Real Madrid</li>
+                <li><strong>12</strong> → Ganas si gana cualquiera de los dos (no sirve el empate)</li>
+            </ul>
+            <div class="ejemplo">
+                <strong>Ejemplo:</strong><br>
+                Si apuestas 1X y el partido termina 2-2, ganas. Si termina 1-0 también ganas. Si gana Real Madrid, pierdes.
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>3. GOLES: UNDER/OVER (1.5, 2.5, 3.5)</h2>
+            <p>Se apuesta al total de goles en el partido, sin importar quién los anote.</p>
+            <ul>
+                <li><strong>U</strong> → "Under" (menos de)</li>
+                <li><strong>O</strong> → "Over" (más de)</li>
+            </ul>
+            <p><strong>Tipos:</strong></p>
+            <ul>
+                <li>U 1.5 → Menos de 2 goles</li>
+                <li>O 1.5 → 2 o más goles</li>
+                <li>U 2.5 → Menos de 3 goles</li>
+                <li>O 2.5 → 3 o más goles</li>
+                <li>U 3.5 → Menos de 4 goles</li>
+                <li>O 3.5 → 4 o más goles</li>
+            </ul>
+            <div class="ejemplo">
+                <strong>Ejemplo:</strong><br>
+                Si apuestas O 2.5 en Barcelona vs Real Madrid y el partido termina 2-2, ganas (4 goles).
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>4. ¿AMBOS EQUIPOS MARCAN? (G / NG)</h2>
+            <p>Se apuesta a si ambos equipos anotarán al menos un gol.</p>
+            <ul>
+                <li><strong>G</strong> → Sí (Gol de ambos equipos)</li>
+                <li><strong>NG</strong> → No (Uno o los dos no marcan)</li>
+            </ul>
+            <div class="ejemplo">
+                <strong>Ejemplo:</strong><br>
+                <strong>G:</strong> Si el partido queda 2-1, ganas (marcaron los dos).<br>
+                <strong>NG:</strong> Si termina 3-0 o 0-0, ganas (uno o ninguno marcó).
+            </div>
+        </div>
+
+        <a href="index.html" class="volver-btn">
+            <i class="fas fa-arrow-left"></i> Volver a Apuestas
+        </a>
+    </div>
+</body>
+</html>

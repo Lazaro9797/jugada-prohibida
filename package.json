@@ -1,0 +1,22 @@
+{
+  "name": "la-jugada-prohibida",
+  "version": "1.0.0",
+  "description": "Casa de apuestas deportivas",
+  "main": "index.html",
+  "scripts": {
+    "start": "npx http-server -p 3000",
+    "build": "echo 'No build needed for GitHub Pages'",
+    "deploy": "gh-pages -d ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tu-usuario/la-jugada-prohibida.git"
+  },
+  "keywords": ["apuestas", "deportes", "futbol"],
+  "author": "Tu Nombre",
+  "license": "MIT",
+  "devDependencies": {
+    "http-server": "^14.1.1",
+    "gh-pages": "^6.1.1"
+  }
+}
