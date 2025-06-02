@@ -1,11 +1,13 @@
 // Sistema de carrito de apuestas
-class CartManager {
-    constructor() {
+class CartManager {    constructor() {
         this.cartContainer = null;
         this.cartButton = null;
         this.items = [];
+        this.combinations = []; // Array para manejar combinaciones
+        this.combinationMode = false; // Modo combinación activado/desactivado
+        this.activeTab = 'individual'; // Pestaña activa por defecto
         this.init();
-    }    init() {
+    }init() {
         this.loadCart();
         this.createCartInterface();
         this.updateCartDisplay();
@@ -25,7 +27,7 @@ class CartManager {
         if (this.cartContainer && !this.cartContainer.classList.contains('open')) {
             this.cartContainer.classList.add('open');
         }
-    }addToCart(item) {
+    }    addToCart(item) {
         
         if (!item) {
             console.error('❌ Item es null o undefined');
@@ -35,6 +37,8 @@ class CartManager {
         // Asegurar que la cuota sea un número
         item.cuota = parseFloat(item.cuota) || 0;
         item.betAmount = 0; // Inicializar monto en 0
+        item.isSelected = false; // Para seleccionar en combinaciones
+        item.combinationId = null; // ID de combinación si pertenece a una
         
         // Verificar si ya existe una apuesta idéntica
         const existingIndex = this.items.findIndex(existing => 
@@ -85,10 +89,10 @@ class CartManager {
             this.updateCartBadge();
             this.showNotification('Apuesta eliminada del carrito');
         }
-    }
-
-    clearCart() {
+    }    clearCart() {
         this.items = [];
+        this.combinations = [];
+        this.combinationMode = false;
         this.saveCart();
         this.updateCartDisplay();
         this.updateCartBadge();
@@ -97,23 +101,36 @@ class CartManager {
 
     saveCart() {
         try {
-            localStorage.setItem('betting-cart', JSON.stringify(this.items));
+            const cartData = {
+                items: this.items,
+                combinations: this.combinations
+            };
+            localStorage.setItem('betting-cart', JSON.stringify(cartData));
         } catch (error) {
             console.error('Error guardando carrito:', error);
             this.showNotification('Error al guardar el carrito', 'error');
         }
-    }
-
-    loadCart() {
+    }    loadCart() {
         try {
             const savedCart = localStorage.getItem('betting-cart');
             if (savedCart) {
-                this.items = JSON.parse(savedCart);
+                const cartData = JSON.parse(savedCart);
+                
+                // Compatibilidad con versiones anteriores
+                if (Array.isArray(cartData)) {
+                    this.items = cartData;
+                    this.combinations = [];
+                } else {
+                    this.items = cartData.items || [];
+                    this.combinations = cartData.combinations || [];
+                }
+                
                 this.updateCartBadge();
             }
         } catch (error) {
             console.error('Error cargando carrito:', error);
             this.items = [];
+            this.combinations = [];
             this.showNotification('Error al cargar el carrito', 'error');
         }
     }
@@ -132,22 +149,43 @@ class CartManager {
         
         // Crear contenedor del carrito
         const cartContainer = document.createElement('div');
-        cartContainer.className = 'cart-container';
-        cartContainer.innerHTML = `
+        cartContainer.className = 'cart-container';        cartContainer.innerHTML = `
             <div class="cart-header">
                 <h3>🛒 Mi Carrito de Apuestas</h3>
                 <button class="cart-close" onclick="cartManager.toggleCart()">×</button>
+            </div>            <div class="cart-controls">
+                <button id="combination-mode-btn" onclick="cartManager.toggleCombinationMode()" class="combination-btn">
+                    🎲 Hacer Combo
+                </button>
+                <button id="create-combination-btn" onclick="cartManager.createCombination()" class="create-combination-btn" style="display: none;">
+                    ⚡ Combinar (<span id="selected-count">0</span>)
+                </button>
+                <div id="combination-help" style="display: none; color: #28a745; font-size: 12px; margin-top: 8px; padding: 8px; background: rgba(40, 167, 69, 0.1); border-radius: 4px;">
+                    ✨ Selecciona varias apuestas y multiplica las ganancias
+                </div>
             </div>
-            <div class="cart-items"></div>
-            <div class="cart-footer">
-                <div class="cart-total">
-                    <div>Total: $<span id="cart-total">0.00</span></div>
-                    <div>Cuota: <span id="cart-odds">1.00</span></div>
-                    <div>Ganancia: $<span id="cart-potential">0.00</span></div>
+            
+            <!-- Pestañas del carrito -->
+            <div class="cart-tabs" id="cart-tabs" style="display: none;">
+                <button class="tab-btn active" onclick="cartManager.switchTab('individual')" id="tab-individual">
+                    💰 Apuestas (<span id="individual-count">0</span>)
+                </button>
+                <button class="tab-btn" onclick="cartManager.switchTab('combinations')" id="tab-combinations">
+                    🎲 Combos (<span id="combo-count">0</span>)
+                </button>
+            </div>
+            
+            <div class="cart-content">
+                <div class="cart-items" id="cart-items-container"></div>
+                <div class="cart-combinations" id="cart-combinations-container" style="display: none;"></div>
+            </div><div class="cart-footer">                <div class="cart-total">
+                    <div>💰 Apuestas Simples: $<span id="cart-total">0.00</span></div>
+                    <div>🎲 Combos: $<span id="cart-combination-total">0.00</span></div>
+                    <div class="total-line">🏆 Total Apostado: $<span id="cart-final-total">0.00</span></div>
                 </div>                <div class="cart-actions">
                     <button onclick="cartManager.clearCart()" class="clear-btn">🗑️ Limpiar</button>
-                    <button onclick="cartManager.previewMessage()" class="preview-btn">👁️ Vista Previa</button>
-                    <button onclick="cartManager.sendWhatsApp()" class="whatsapp-btn">📱 Enviar por WhatsApp</button>
+                    <button onclick="cartManager.previewMessage()" class="preview-btn">👁️ Ver Mensaje</button>
+                    <button onclick="cartManager.sendWhatsApp()" class="whatsapp-btn">📱 Enviar</button>
                 </div>
             </div>
         `;
@@ -235,12 +273,55 @@ class CartManager {
                 display: flex;
                 align-items: center;
                 justify-content: center;
-            }
-
-            .cart-items {
+            }            .cart-items {
                 flex: 1;
                 overflow-y: auto;
                 padding: 10px;
+            }
+
+            /* Estilos para pestañas */
+            .cart-tabs {
+                display: flex;
+                background: #333;
+                border-bottom: 1px solid #555;
+            }
+
+            .tab-btn {
+                flex: 1;
+                background: #2a2a2a;
+                color: #ccc;
+                border: none;
+                padding: 12px 16px;
+                cursor: pointer;
+                font-size: 13px;
+                font-weight: bold;
+                transition: all 0.3s ease;
+                border-bottom: 3px solid transparent;
+            }
+
+            .tab-btn:hover {
+                background: #333;
+                color: white;
+            }
+
+            .tab-btn.active {
+                background: #1e1e1e;
+                color: #ff6b00;
+                border-bottom-color: #ff6b00;
+            }
+
+            .cart-content {
+                flex: 1;
+                overflow: hidden;
+                display: flex;
+                flex-direction: column;
+            }
+
+            .cart-items, .cart-combinations {
+                flex: 1;
+                overflow-y: auto;
+                padding: 10px;
+                background: #1e1e1e;
             }
 
             .cart-item {
@@ -535,9 +616,7 @@ class CartManager {
             .item-amount label {
                 color: #ccc;
                 font-size: 12px;
-            }
-
-            .item-amount input {
+            }            .item-amount input {
                 flex: 1;
                 background: #333;
                 border: 1px solid #555;
@@ -546,7 +625,218 @@ class CartManager {
                 border-radius: 4px;
                 font-size: 12px;
             }
-        `;        document.head.appendChild(styles);
+
+            /* Estilos para combinaciones */
+            .cart-controls {
+                padding: 10px;
+                border-bottom: 1px solid #333;
+                background: #2a2a2a;
+            }            .combination-btn {
+                background: linear-gradient(45deg, #007bff, #0056b3);
+                color: white;
+                border: none;
+                padding: 10px 15px;
+                border-radius: 8px;
+                cursor: pointer;
+                font-size: 13px;
+                font-weight: bold;
+                margin-right: 8px;
+                transition: all 0.3s ease;
+                box-shadow: 0 2px 4px rgba(0, 123, 255, 0.3);
+            }
+
+            .combination-btn:hover {
+                background: linear-gradient(45deg, #0056b3, #004085);
+                transform: translateY(-1px);
+                box-shadow: 0 4px 8px rgba(0, 123, 255, 0.4);
+            }
+
+            .combination-btn.active {
+                background: linear-gradient(45deg, #dc3545, #c82333);
+                animation: pulse 1.5s infinite;
+            }
+
+            @keyframes pulse {
+                0% { transform: scale(1); }
+                50% { transform: scale(1.05); }
+                100% { transform: scale(1); }
+            }            .create-combination-btn {
+                background: linear-gradient(45deg, #28a745, #20c997);
+                color: white;
+                border: none;
+                padding: 10px 15px;
+                border-radius: 8px;
+                cursor: pointer;
+                font-size: 13px;
+                font-weight: bold;
+                transition: all 0.3s ease;
+                box-shadow: 0 2px 4px rgba(40, 167, 69, 0.3);
+                animation: glow 2s ease-in-out infinite alternate;
+            }
+
+            .create-combination-btn:hover {
+                background: linear-gradient(45deg, #20c997, #1e7e34);
+                transform: translateY(-1px);
+                box-shadow: 0 4px 8px rgba(40, 167, 69, 0.4);
+            }
+
+            @keyframes glow {
+                from { box-shadow: 0 2px 4px rgba(40, 167, 69, 0.3); }
+                to { box-shadow: 0 4px 12px rgba(40, 167, 69, 0.6); }
+            }            .cart-item.selectable {
+                cursor: pointer;
+                transition: all 0.3s ease;
+                border: 2px solid transparent;
+                position: relative;
+            }
+
+            .cart-item.selectable:hover {
+                background: #333;
+                border-color: #007bff;
+                transform: translateX(5px);
+            }            .cart-item.selectable::before {
+                content: "👆 Toca para elegir";
+                position: absolute;
+                top: -25px;
+                right: 0;
+                background: #007bff;
+                color: white;
+                padding: 4px 8px;
+                border-radius: 4px;
+                font-size: 11px;
+                opacity: 0;
+                transition: opacity 0.3s ease;
+                pointer-events: none;
+            }
+
+            .cart-item.selectable:hover::before {
+                opacity: 1;
+            }
+
+            .cart-item.selected {
+                background: linear-gradient(135deg, #004085, #0056b3);
+                border-color: #007bff;
+                box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+                transform: translateX(5px);
+            }
+
+            .cart-item.selected::before {
+                content: "✅ Elegida";
+                opacity: 1;
+                background: #28a745;
+            }
+
+            .item-selector {
+                margin-bottom: 8px;
+            }
+
+            .item-selector input[type="checkbox"] {
+                margin-right: 8px;
+            }            .cart-combinations {
+                flex: 1;
+                overflow-y: auto;
+                padding: 10px;
+                background: #1e1e1e;
+            }.empty-combinations {
+                text-align: center;
+                padding: 20px;
+                color: #666;
+                font-style: italic;
+                font-size: 14px;
+            }
+
+            .combination-item {
+                background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
+                margin-bottom: 15px;
+                padding: 15px;
+                border-radius: 8px;
+                border: 2px solid #007bff;
+                box-shadow: 0 4px 12px rgba(0, 123, 255, 0.2);
+            }
+
+            .combination-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 10px;
+            }            .combination-title {
+                color: #28a745;
+                font-weight: bold;
+                font-size: 16px;
+            }
+
+            .remove-combination {
+                background: #dc3545;
+                color: white;
+                border: none;
+                border-radius: 50%;
+                width: 20px;
+                height: 20px;
+                font-size: 12px;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .combination-details {
+                margin-bottom: 10px;
+            }
+
+            .combination-bet {
+                color: #ccc;
+                font-size: 12px;
+                margin-bottom: 5px;
+                padding-left: 10px;
+            }            .combination-odds {
+                color: #ffc107;
+                font-weight: bold;
+                margin-bottom: 10px;
+                text-align: center;
+                background: #333;
+                padding: 10px;
+                border-radius: 6px;
+                font-size: 16px;
+            }
+
+            .combination-amount {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                flex-wrap: wrap;
+            }
+
+            .combination-amount label {
+                color: #ccc;
+                font-size: 12px;
+            }
+
+            .combination-amount input {
+                background: #333;
+                border: 1px solid #555;
+                color: white;
+                padding: 4px 8px;
+                border-radius: 4px;
+                font-size: 12px;
+                width: 80px;
+            }
+
+            .potential-win {
+                color: #28a745;
+                font-weight: bold;
+                font-size: 12px;
+                margin-top: 5px;
+                width: 100%;
+            }
+
+            .total-line {
+                border-top: 1px solid #555;
+                padding-top: 8px;
+                margin-top: 8px;
+                font-size: 16px;
+                color: #ff6b00;
+            }
+        `;document.head.appendChild(styles);
         // No agregar cartButton duplicado - usar el del HTML
         document.body.appendChild(cartContainer);
 
@@ -569,96 +859,397 @@ class CartManager {
 
     getPotentialWinnings() {
         return this.getTotalAmount() * this.getTotalOdds();
+    }    // Métodos para manejar combinaciones
+    toggleCombinationMode() {
+        this.combinationMode = !this.combinationMode;
+        
+        if (this.combinationMode) {
+            // Limpiar selecciones previas
+            this.items.forEach(item => item.isSelected = false);
+            this.showNotification('🎲 Modo combo activado. Toca las apuestas que quieras combinar', 'success');
+        } else {
+            // Limpiar selecciones
+            this.items.forEach(item => item.isSelected = false);
+            this.showNotification('Modo combo cancelado', 'warning');
+        }
+        
+        this.updateCartDisplay();
     }
 
-    updateCartDisplay() {
+    toggleItemSelection(index) {
+        if (!this.combinationMode) return;
+        
+        if (this.items[index] && !this.items[index].combinationId) {
+            this.items[index].isSelected = !this.items[index].isSelected;
+            this.updateCartDisplay();
+        }
+    }
+
+    createCombination() {
+        const selectedItems = this.items.filter(item => item.isSelected);
+          if (selectedItems.length < 2) {
+            this.showNotification('Necesitas elegir al menos 2 apuestas', 'warning');
+            return;
+        }        // Crear nueva combinación
+        const combinationId = Date.now().toString();
+        // Add logs to see what we're working with
+        console.log('Creating combination with selected items:', selectedItems);
+        console.log('Selected item cuotas:', selectedItems.map(item => item.cuota));
+        
+        const combination = {
+            id: combinationId,
+            items: selectedItems.map(item => ({...item})),
+            combinedOdds: selectedItems.reduce((total, item) => total + item.cuota, 0),
+            betAmount: 0,
+            timestamp: Date.now()
+        };
+        
+        console.log('Created combination with combined odds:', combination.combinedOdds);
+        console.log(selectedItems);
+        
+
+        this.combinations.push(combination);
+
+        // Marcar items como parte de esta combinación y deseleccionar
+        selectedItems.forEach(item => {
+            const originalIndex = this.items.findIndex(original => 
+                original.partidoId === item.partidoId && original.tipo === item.tipo
+            );
+            if (originalIndex !== -1) {
+                this.items[originalIndex].combinationId = combinationId;
+                this.items[originalIndex].isSelected = false;
+            }
+        });
+
+        this.combinationMode = false;
+        this.saveCart();
+        this.updateCartDisplay();        this.showNotification(`✅ Combo creado! ${selectedItems.length} apuestas con cuota ${combination.combinedOdds.toFixed(2)}`);
+    }
+
+    updateCombinationAmount(combinationId, amount) {
+        const combination = this.combinations.find(c => c.id === combinationId);
+        if (combination) {
+            const newAmount = parseFloat(amount) || 0;
+            if (newAmount < 0) {
+                this.showNotification('El monto debe ser mayor a 0', 'error');
+                return;
+            }
+            
+            combination.betAmount = newAmount;
+            this.saveCart();
+            this.updateCartDisplay();
+        }
+    }
+
+    removeCombination(combinationId) {
+        const combinationIndex = this.combinations.findIndex(c => c.id === combinationId);
+        if (combinationIndex !== -1) {
+            // Liberar items de la combinación
+            this.items.forEach(item => {
+                if (item.combinationId === combinationId) {
+                    item.combinationId = null;
+                }
+            });
+
+            this.combinations.splice(combinationIndex, 1);
+            this.saveCart();
+            this.updateCartDisplay();            this.showNotification('Combo eliminado');
+        }
+    }
+
+    getSelectedItemsCount() {
+        return this.items.filter(item => item.isSelected).length;
+    }
+
+    getTotalCombinationAmount() {
+        return this.combinations.reduce((total, combination) => total + (combination.betAmount || 0), 0);
+    }    getTotalCombinationWinnings() {
+        return this.combinations.reduce((total, combination) => {
+            return total + ((combination.betAmount || 0) * combination.combinedOdds);
+        }, 0);
+    }
+
+    // Método para cambiar entre pestañas
+    switchTab(tab) {
+        this.activeTab = tab;
+        
+        // Actualizar botones de pestañas
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.classList.remove('active');
+        });
+        document.getElementById(`tab-${tab}`).classList.add('active');
+        
+        // Mostrar/ocultar contenido
+        const itemsContainer = document.getElementById('cart-items-container');
+        const combinationsContainer = document.getElementById('cart-combinations-container');
+        
+        if (tab === 'individual') {
+            itemsContainer.style.display = 'block';
+            combinationsContainer.style.display = 'none';
+        } else {
+            itemsContainer.style.display = 'none';
+            combinationsContainer.style.display = 'block';
+        }
+    }updateCartDisplay() {
         const cartItems = document.querySelector('.cart-items');
+        const cartCombinations = document.querySelector('.cart-combinations');
         if (!cartItems) return;
 
-        // Actualizar contenido del carrito
-        cartItems.innerHTML = this.items.length === 0 
-            ? '<div class="empty-cart">No hay apuestas en el carrito</div>'
-            : this.items.map((item, index) => `
-                <div class="cart-item">
-                    <div class="item-header">
-                        <div class="item-league">${item.liga} - ${item.hora}</div>
-                        <button onclick="cartManager.removeFromCart(${index})" class="remove-item">×</button>
-                    </div>
-                    <div class="item-match">${item.local} vs ${item.visitante}</div>
-                    <div class="item-bet">
-                        <span class="bet-type">${item.tipoLabel}</span>
-                        <span class="bet-odds">@ ${item.cuota}</span>
-                    </div>
-                    <div class="item-amount">
-                        <label>Monto: $</label>
-                        <input type="number" 
-                            value="${item.betAmount || ''}" 
-                            min="0" 
-                            step="0.01" 
-                            placeholder="0.00"
-                            onchange="cartManager.updateBetAmount(${index}, this.value)"
-                        >
+        // Filtrar items que no están en combinaciones
+        const independentItems = this.items.filter(item => !item.combinationId);
+
+        // Actualizar contenido de apuestas individuales
+        cartItems.innerHTML = independentItems.length === 0 
+            ? '<div class="empty-cart">No hay apuestas individuales</div>'
+            : independentItems.map((item, index) => {
+                const originalIndex = this.items.findIndex(original => 
+                    original.partidoId === item.partidoId && original.tipo === item.tipo
+                );
+                
+                return `
+                <div class="cart-item ${item.isSelected ? 'selected' : ''} ${this.combinationMode ? 'selectable' : ''}">
+                    ${this.combinationMode ? `
+                        <div class="item-selector">
+                            <input type="checkbox" 
+                                ${item.isSelected ? 'checked' : ''} 
+                                onchange="cartManager.toggleItemSelection(${originalIndex})"
+                            >
+                        </div>
+                    ` : ''}
+                    <div class="item-content">
+                        <div class="item-header">
+                            <div class="item-league">${item.liga} - ${item.hora}</div>
+                            <button onclick="cartManager.removeFromCart(${originalIndex})" class="remove-item">×</button>
+                        </div>
+                        <div class="item-match">${item.local} vs ${item.visitante}</div>
+                        <div class="item-bet">
+                            <span class="bet-type">${item.tipoLabel}</span>
+                            <span class="bet-odds">@ ${item.cuota}</span>
+                        </div>
+                        <div class="item-amount">
+                            <label>Monto: $</label>
+                            <input type="number" 
+                                value="${item.betAmount || ''}" 
+                                min="0" 
+                                step="0.01" 
+                                placeholder="0.00"
+                                onchange="cartManager.updateBetAmount(${originalIndex}, this.value)"
+                            >
+                        </div>
                     </div>
                 </div>
-            `).join('');
+            `}).join('');        // Actualizar combinaciones
+        if (cartCombinations) {
+            cartCombinations.innerHTML = this.combinations.length === 0 
+                ? ''  // No mostrar mensaje cuando no hay combinaciones
+                : this.combinations.map(combination => `
+                    <div class="combination-item">
+                        <div class="combination-header">
+                            <div class="combination-title">🔗 Combinación (${combination.items.length} apuestas)</div>
+                            <button onclick="cartManager.removeCombination('${combination.id}')" class="remove-combination">×</button>
+                        </div>
+                        <div class="combination-details">
+                            ${combination.items.map(item => `
+                                <div class="combination-bet">
+                                    ${item.local} vs ${item.visitante} - ${item.tipoLabel} @ ${item.cuota}
+                                </div>
+                            `).join('')}
+                        </div>
+                        <div class="combination-odds">
+                            <strong>Cuota combinada: ${combination.combinedOdds.toFixed(2)}</strong>
+                        </div>
+                        <div class="combination-amount">
+                            <label>Monto: $</label>
+                            <input type="number" 
+                                value="${combination.betAmount || ''}" 
+                                min="0" 
+                                step="0.01" 
+                                placeholder="0.00"
+                                onchange="cartManager.updateCombinationAmount('${combination.id}', this.value)"
+                            >
+                            <div class="potential-win">
+                                Ganancia potencial: $${((combination.betAmount || 0) * combination.combinedOdds).toFixed(2)}
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+        }
+
+        // Gestionar pestañas: solo mostrar si hay combinaciones
+        const cartTabs = document.getElementById('cart-tabs');
+        const hasCombinations = this.combinations.length > 0;
+        
+        if (cartTabs) {
+            if (hasCombinations) {
+                cartTabs.style.display = 'flex';
+                
+                // Actualizar contadores de pestañas
+                const individualCount = document.getElementById('individual-count');
+                const comboCount = document.getElementById('combo-count');
+                
+                if (individualCount) {
+                    individualCount.textContent = independentItems.length;
+                }
+                if (comboCount) {
+                    comboCount.textContent = this.combinations.length;
+                }
+                
+                // Cambiar a pestaña de combos automáticamente si no hay apuestas individuales
+                if (independentItems.length === 0 && this.activeTab === 'individual') {
+                    this.switchTab('combinations');
+                }
+                
+                // Cambiar a pestaña individual automáticamente si no hay combos
+                if (this.combinations.length === 0 && this.activeTab === 'combinations') {
+                    this.switchTab('individual');
+                }
+                
+                // Mostrar contenido según pestaña activa
+                this.switchTab(this.activeTab);
+            } else {
+                // No hay combinaciones, ocultar pestañas y mostrar solo apuestas individuales
+                cartTabs.style.display = 'none';
+                this.activeTab = 'individual';
+                
+                const itemsContainer = document.getElementById('cart-items-container');
+                const combinationsContainer = document.getElementById('cart-combinations-container');
+                
+                if (itemsContainer) itemsContainer.style.display = 'block';
+                if (combinationsContainer) combinationsContainer.style.display = 'none';
+            }
+        }
+
+        // Actualizar controles de combinación
+        const combinationModeBtn = document.getElementById('combination-mode-btn');
+        const createCombinationBtn = document.getElementById('create-combination-btn');
+        const selectedCount = document.getElementById('selected-count');        if (combinationModeBtn) {
+            combinationModeBtn.textContent = this.combinationMode ? '❌ Cancelar' : '🎲 Hacer Combo';
+            combinationModeBtn.className = this.combinationMode ? 'combination-btn active' : 'combination-btn';
+        }
+
+        if (createCombinationBtn) {
+            const selectedItemsCount = this.getSelectedItemsCount();
+            createCombinationBtn.style.display = this.combinationMode && selectedItemsCount >= 2 ? 'block' : 'none';
+        }
+
+        if (selectedCount) {
+            selectedCount.textContent = this.getSelectedItemsCount();
+        }
 
         // Actualizar totales
-        document.getElementById('cart-total').textContent = this.getTotalAmount().toFixed(2);
-        document.getElementById('cart-odds').textContent = this.getTotalOdds().toFixed(2);
-        document.getElementById('cart-potential').textContent = this.getPotentialWinnings().toFixed(2);
+        const individualTotal = this.getTotalAmount();
+        const combinationTotal = this.getTotalCombinationAmount();
+        const finalTotal = individualTotal + combinationTotal;
+
+        document.getElementById('cart-total').textContent = individualTotal.toFixed(2);
+        document.getElementById('cart-combination-total').textContent = combinationTotal.toFixed(2);
+        document.getElementById('cart-final-total').textContent = finalTotal.toFixed(2);
 
         // Actualizar contador del ícono
         const cartCount = document.getElementById('cartCount');
         if (cartCount) {
-            cartCount.textContent = this.getItemCount();
+            cartCount.textContent = this.getItemCount() + this.combinations.length;
         }
-    }
+    }    generateWhatsAppMessage(encode = true) {
+        const individualItems = this.items.filter(item => !item.combinationId);
+        const hasCombinations = this.combinations.length > 0;
+        
+        if (individualItems.length === 0 && !hasCombinations) return '';
 
-    generateWhatsAppMessage(encode = true) {
-        if (this.items.length === 0) return '';
-
-        // Verificar que todas las apuestas tengan monto
-        const invalidBets = this.items.filter(item => !item.betAmount || item.betAmount <= 0);
+        // Verificar que todas las apuestas individuales tengan monto
+        const invalidBets = individualItems.filter(item => !item.betAmount || item.betAmount <= 0);
         if (invalidBets.length > 0) {
-            this.showNotification('Todas las apuestas deben tener un monto válido', 'error');
+            this.showNotification('Todas las apuestas individuales deben tener un monto válido', 'error');
+            return '';
+        }
+
+        // Verificar que todas las combinaciones tengan monto
+        const invalidCombinations = this.combinations.filter(combination => !combination.betAmount || combination.betAmount <= 0);
+        if (invalidCombinations.length > 0) {
+            this.showNotification('Todas las combinaciones deben tener un monto válido', 'error');
             return '';
         }
 
         const message = [
-            '🎮 *NUEVA APUESTA - La Jugada Prohibida* 🎮\n',
-            '📝 *Detalle de las apuestas:*\n'
+            '🎮 *NUEVA APUESTA - La Jugada Prohibida* 🎮\n'
         ];
 
-        // Agrupar apuestas por liga
-        const betsByLeague = {};
-        this.items.forEach(item => {
-            if (!betsByLeague[item.liga]) {
-                betsByLeague[item.liga] = [];
-            }
-            betsByLeague[item.liga].push(item);
-        });
+        // Apuestas individuales
+        if (individualItems.length > 0) {
+            message.push('📝 *Apuestas Individuales:*\n');
 
-        // Generar mensaje organizado por ligas
-        Object.entries(betsByLeague).forEach(([liga, apuestas]) => {
-            message.push(`🏆 *${liga}*`);
-            apuestas.forEach(item => {
+            // Agrupar apuestas por liga
+            const betsByLeague = {};
+            individualItems.forEach(item => {
+                if (!betsByLeague[item.liga]) {
+                    betsByLeague[item.liga] = [];
+                }
+                betsByLeague[item.liga].push(item);
+            });
+
+            // Generar mensaje organizado por ligas
+            Object.entries(betsByLeague).forEach(([liga, apuestas]) => {
+                message.push(`🏆 *${liga}*`);
+                apuestas.forEach(item => {
+                    message.push(
+                        `   ⚽ ${item.local} vs ${item.visitante} (${item.hora})`,
+                        `   📍 ${item.tipoLabel} @ ${item.cuota}`,
+                        `   💰 Monto: $${item.betAmount?.toFixed(2) || '0.00'}\n`
+                    );
+                });
+            });
+        }
+
+        // Combinaciones
+        if (hasCombinations) {
+            message.push('\n🔗 *Apuestas Combinadas:*\n');
+            
+            this.combinations.forEach((combination, index) => {
+                message.push(`🎯 *Combinación ${index + 1} (${combination.items.length} apuestas):*`);
+                
+                combination.items.forEach(item => {
+                    message.push(`   ⚽ ${item.local} vs ${item.visitante} - ${item.tipoLabel} @ ${item.cuota}`);
+                });
+                
                 message.push(
-                    `   ⚽ ${item.local} vs ${item.visitante} (${item.hora})`,
-                    `   📍 ${item.tipoLabel} @ ${item.cuota}`,
-                    `   💰 Monto: $${item.betAmount?.toFixed(2) || '0.00'}\n`
+                    `   🎲 Cuota combinada: ${combination.combinedOdds.toFixed(2)}`,
+                    `   💰 Monto: $${combination.betAmount.toFixed(2)}`,
+                    `   🏆 Ganancia potencial: $${(combination.betAmount * combination.combinedOdds).toFixed(2)}\n`
                 );
             });
-        });        message.push(
-            `\n📊 *Resumen:*`,
-            `• Total apostado: $${this.getTotalAmount().toFixed(2)}`
-        );
+        }
+
+        // Resumen
+        const individualTotal = this.getTotalAmount();
+        const combinationTotal = this.getTotalCombinationAmount();
+        const finalTotal = individualTotal + combinationTotal;
+
+        message.push(`\n📊 *Resumen:*`);
+        
+        if (individualItems.length > 0) {
+            message.push(`• Apuestas individuales: $${individualTotal.toFixed(2)}`);
+        }
+        
+        if (hasCombinations) {
+            message.push(`• Apuestas combinadas: $${combinationTotal.toFixed(2)}`);
+            message.push(`• Ganancia potencial combinaciones: $${this.getTotalCombinationWinnings().toFixed(2)}`);
+        }
+        
+        message.push(`• *Total apostado: $${finalTotal.toFixed(2)}*`);
 
         return encode ? encodeURIComponent(message.join('\n')) : message.join('\n');
-    }
-
-    previewMessage() {
+    }    previewMessage() {
         const message = this.generateWhatsAppMessage(false);
         if (!message) {
+            this.showNotification('Agrega apuestas al carrito primero', 'error');
+            return;
+        }
+
+        // Verificar que hay apuestas válidas
+        const individualItems = this.items.filter(item => !item.combinationId);
+        const totalItems = individualItems.length + this.combinations.length;
+        
+        if (totalItems === 0) {
             this.showNotification('Agrega apuestas al carrito primero', 'error');
             return;
         }
@@ -673,7 +1264,7 @@ class CartManager {
                     <button class="preview-close" onclick="this.closest('.preview-modal').remove()">×</button>
                 </div>
                 <div class="preview-body">
-                    ${decodeURIComponent(message).replace(/\n/g, '<br>')}
+                    ${message.replace(/\n/g, '<br>')}
                 </div>
             </div>
         `;
@@ -740,12 +1331,19 @@ class CartManager {
         }
 
         document.body.appendChild(modal);
-    }
-
-    async sendWhatsApp() {
+    }async sendWhatsApp() {
         const message = this.generateWhatsAppMessage(true);
         if (!message) {
             return; // El mensaje de error ya se muestra en generateWhatsAppMessage
+        }
+
+        // Verificar que hay apuestas válidas
+        const individualItems = this.items.filter(item => !item.combinationId);
+        const totalItems = individualItems.length + this.combinations.length;
+        
+        if (totalItems === 0) {
+            this.showNotification('Agrega apuestas al carrito primero', 'error');
+            return;
         }
 
         try {
