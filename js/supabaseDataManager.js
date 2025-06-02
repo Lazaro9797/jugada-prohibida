@@ -2,8 +2,8 @@
 class SupabaseDataManager {
     constructor() {
         // Configuración de Supabase - CAMBIAR POR TUS VALORES
-        this.SUPABASE_URL = 'https://faqiotknhlrdsmwwcbar.supabase.co'; // Ej: https://xxxxx.supabase.co
-        this.SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZhcWlvdGtuaGxyZHNtd3djYmFyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg1MzUwMDYsImV4cCI6MjA2NDExMTAwNn0._BQOSpjX64dW7vayaqLHXjH9ld_pAFXFBHyi8AVumiU';
+        this.SUPABASE_URL = 'https://kpjvbmhqqmjigztpxpco.supabase.co'; // Ej: https://xxxxx.supabase.co
+        this.SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtwanZibWhxcW1qaWd6dHB4cGNvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg3OTczMjEsImV4cCI6MjA2NDM3MzMyMX0.YHu0KnbwAtE2F1qimZlIxxqu_kyhis9mx1qkoZSJsz4';
         
         this.supabase = null;
         this.isAuthenticated = false;
