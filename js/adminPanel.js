@@ -2671,31 +2671,41 @@ class AdminPanel {
         
         const styles = document.createElement('style');
         styles.id = 'template-styles';
-        styles.textContent = `
-            .template-section {
+        styles.textContent = `            
+        .template-section {
                 margin-bottom: 25px;
-                padding: 15px;
-                background: rgba(255, 255, 255, 0.05);
-                border-radius: 8px;
-                border-left: 3px solid var(--primary-color);
+                padding: 20px;
+                background: rgba(255, 255, 255, 0.02);
+                border-radius: 10px;
+                border: 1px solid rgba(255, 107, 0, 0.2);
             }
             
-            .template-types-grid {
-                display: grid;
-                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-                gap: 10px;
-                margin-top: 10px;
-            }
-            
-            .template-type-item {
+            .template-section h4 {
                 display: flex;
                 align-items: center;
-                padding: 8px 12px;
+                gap: 8px;
+                margin-bottom: 15px;
+                color: var(--primary-color);
+                font-size: 1.1rem;
+                font-weight: 600;
+            }
+              .template-types-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                gap: 12px;
+                margin-top: 15px;
+            }
+              .template-type-item {
+                display: flex;
+                align-items: center;
+                padding: 12px 15px;
                 background: rgba(0, 0, 0, 0.3);
-                border-radius: 6px;
+                border-radius: 8px;
                 cursor: pointer;
                 transition: all 0.3s ease;
                 border: 1px solid transparent;
+                user-select: none;
+                min-height: 44px; /* Mejorar touch target */
             }
             
             .template-type-item:hover {
@@ -2712,16 +2722,18 @@ class AdminPanel {
                 color: var(--text-primary);
                 font-weight: 500;
             }
-            
-            .custom-type-row {
+              .custom-type-row {
                 display: flex;
-                gap: 10px;
-                margin-bottom: 10px;
+                gap: 12px;
+                margin-bottom: 12px;
                 align-items: center;
             }
             
             .custom-type-input {
                 flex: 1;
+                min-height: 44px; /* Mejor touch target para móvil */
+                padding: 10px 12px;
+                font-size: 16px; /* Evita zoom en iOS */
             }
             
             .template-assignment-grid {
@@ -2749,36 +2761,64 @@ class AdminPanel {
               .assignment-input {
                 width: 80px;
                 text-align: center;
-            }
-
-            /* Responsive para modales de plantilla */
+            }            /* Responsive para modales de plantilla */
             @media (max-width: 768px) {
+                .admin-modal-content.edit-modal {
+                    max-width: 95% !important;
+                    margin: 10px;
+                    max-height: 95vh;
+                    overflow-y: auto;
+                }
+                
+                .template-section {
+                    padding: 15px;
+                    margin-bottom: 20px;
+                }
+                
+                .template-section h4 {
+                    font-size: 1rem;
+                    margin-bottom: 12px;
+                }
+                
                 .template-types-grid {
-                    grid-template-columns: 1fr;
-                    gap: 8px;
-                }
-
-                .template-type-item {
-                    padding: 10px;
-                }
-
-                .custom-type-row {
-                    flex-direction: column;
-                    gap: 8px;
-                    align-items: stretch;
-                }
-
-                .template-assignment-grid {
                     grid-template-columns: 1fr;
                     gap: 10px;
                 }
 
-                .assignment-item {
-                    flex-direction: column;
-                    gap: 8px;
-                    text-align: center;
+                .template-type-item {
+                    padding: 12px 15px;
+                    min-height: 48px; /* Touch target aumentado */
+                    font-size: 0.95rem;
+                }
+                
+                .template-type-item input[type="checkbox"] {
+                    margin-right: 12px;
+                    transform: scale(1.3);
                 }
 
+                .custom-type-row {
+                    flex-direction: column;
+                    gap: 10px;
+                    align-items: stretch;
+                }
+                
+                .custom-type-row button {
+                    align-self: center;
+                    width: 100px;
+                }
+
+                .template-assignment-grid {
+                    grid-template-columns: 1fr;
+                    gap: 12px;
+                }
+
+                .assignment-item {
+                    flex-direction: column;
+                    gap: 10px;
+                    text-align: center;
+                    padding: 15px;
+                }
+                
                 .assignment-label {
                     min-width: auto;
                 }
@@ -2788,22 +2828,87 @@ class AdminPanel {
                     max-width: 120px;
                     margin: 0 auto;
                 }
-            }
-
-            @media (max-width: 480px) {
+                
+                .admin-actions {
+                    flex-direction: column;
+                    gap: 10px;
+                }
+                
+                .admin-actions button {
+                    width: 100%;
+                    min-height: 48px;
+                    font-size: 1rem;
+                }
+            }            @media (max-width: 480px) {
+                .admin-modal-content.edit-modal {
+                    max-width: 100% !important;
+                    min-width: 100% !important;
+                    height: 100vh;
+                    max-height: 100vh;
+                    margin: 0;
+                    border-radius: 0;
+                }
+                
+                .admin-modal-header {
+                    padding: 12px 15px;
+                }
+                
+                .admin-modal-header h3 {
+                    font-size: 1rem;
+                }
+                
+                .admin-close-btn {
+                    width: 40px;
+                    height: 40px;
+                    font-size: 18px;
+                }
+                
+                .admin-modal-body {
+                    padding: 15px;
+                    height: calc(100vh - 60px);
+                    overflow-y: auto;
+                }
+                
                 .template-section {
-                    padding: 10px;
+                    padding: 12px;
                     margin-bottom: 15px;
                 }
 
                 .template-type-item {
-                    padding: 8px;
+                    padding: 10px 12px;
                     font-size: 0.9rem;
+                    min-height: 44px;
+                }
+                
+                .template-type-item input[type="checkbox"] {
+                    margin-right: 10px;
+                    transform: scale(1.4);
                 }
 
                 .custom-type-input {
-                    padding: 10px;
-                    font-size: 16px;
+                    padding: 12px;
+                    font-size: 16px; /* Evita zoom automático en iOS */
+                    min-height: 44px;
+                }
+                
+                .assignment-item {
+                    padding: 12px;
+                    margin-bottom: 8px;
+                }
+                
+                .admin-actions {
+                    position: sticky;
+                    bottom: 0;
+                    background: #1e1e1e;
+                    padding: 15px;
+                    margin: -15px -15px 0 -15px;
+                    border-top: 1px solid #333;
+                }
+                
+                .admin-actions button {
+                    min-height: 50px;
+                    font-size: 1rem;
+                    font-weight: bold;
                 }
             }
         `;
