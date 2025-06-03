@@ -218,13 +218,13 @@ class AdminPanel {
                 display: flex;
                 align-items: center;
                 justify-content: center;
-            }
-
-            .admin-modal-content {
+            }            .admin-modal-content {
                 background: #1e1e1e;
                 border-radius: 8px;
                 min-width: 400px;
                 max-width: 90vw;
+                max-height: 90vh;
+                overflow-y: auto;
             }
 
             .admin-modal-header {
@@ -241,6 +241,64 @@ class AdminPanel {
 
             .admin-modal-body {
                 padding: 30px;
+            }
+
+            /* Responsive para modales */
+            @media (max-width: 768px) {
+                .admin-modal-content {
+                    min-width: 95vw;
+                    max-width: 95vw;
+                    margin: 2.5vh auto;
+                    border-radius: 12px;
+                }
+
+                .admin-modal-header {
+                    padding: 15px;
+                }
+
+                .admin-modal-header h3 {
+                    font-size: 1.1rem;
+                }
+
+                .admin-modal-body {
+                    padding: 20px;
+                }
+
+                .admin-actions {
+                    flex-direction: column;
+                    gap: 10px;
+                }
+
+                .admin-btn {
+                    width: 100%;
+                    padding: 12px;
+                }
+
+                .admin-input {
+                    width: 100%;
+                    box-sizing: border-box;
+                    padding: 12px;
+                    font-size: 16px;
+                }
+            }
+
+            @media (max-width: 480px) {
+                .admin-modal-content {
+                    min-width: 100vw;
+                    max-width: 100vw;
+                    height: 100vh;
+                    max-height: 100vh;
+                    margin: 0;
+                    border-radius: 0;
+                }
+
+                .admin-modal-header h3 {
+                    font-size: 1rem;
+                }
+
+                .admin-modal-body {
+                    padding: 15px;
+                }
             }
 
             .admin-panel {
@@ -631,9 +689,7 @@ class AdminPanel {
                 background: rgba(0, 123, 255, 0.2);
                 border: 1px solid #007bff;
                 color: #007bff;
-            }
-
-            @keyframes fadeInOut {
+            }            @keyframes fadeInOut {
                 0% { opacity: 0; transform: translateY(-10px); }
                 20% { opacity: 1; transform: translateY(0); }
                 80% { opacity: 1; transform: translateY(0); }
@@ -642,27 +698,150 @@ class AdminPanel {
 
             @media (max-width: 768px) {
                 .admin-panel {
-                    top: 10px;
-                    left: 10px;
-                    width: calc(100% - 20px);
-                    max-height: 90vh;
+                    top: 5px;
+                    left: 5px;
+                    width: calc(100% - 10px);
+                    max-height: 95vh;
+                    border-radius: 0;
+                }
+
+                .admin-panel-header {
+                    padding: 10px 15px;
+                    flex-direction: column;
+                    gap: 10px;
+                }
+
+                .admin-panel-header h3 {
+                    font-size: 1.1rem;
+                }
+
+                .admin-panel-actions {
+                    gap: 8px;
+                    width: 100%;
+                    justify-content: center;
+                }
+
+                .admin-panel-content {
+                    padding: 15px;
+                }
+
+                .admin-section {
+                    padding: 15px;
+                    margin-bottom: 20px;
+                }
+
+                .admin-section h4 {
+                    font-size: 1rem;
+                    margin-bottom: 10px;
                 }
 
                 .cuotas-grid {
-                    grid-template-columns: repeat(3, 1fr);
+                    grid-template-columns: repeat(2, 1fr);
+                    gap: 8px;
                 }
 
                 .form-row {
                     flex-direction: column;
+                    gap: 10px;
+                }
+
+                .dynamic-cuotas-grid {
+                    grid-template-columns: 1fr;
+                    gap: 10px;
+                }
+
+                .form-actions {
+                    flex-direction: column;
+                    gap: 10px;
+                }
+
+                .admin-btn {
+                    width: 100%;
+                    padding: 12px;
+                    font-size: 14px;
+                }
+
+                .input-group {
+                    width: 100%;
+                }
+
+                .admin-input {
+                    width: 100%;
+                    box-sizing: border-box;
+                    padding: 12px;
+                    font-size: 16px;
+                }
+
+                .admin-ligas-list, .admin-partidos-list {
+                    max-height: 200px;
+                }
+
+                .admin-liga-item, .admin-partido-item {
+                    flex-direction: column;
+                    align-items: flex-start;
+                    gap: 10px;
+                    padding: 12px;
+                }
+
+                .admin-liga-actions, .admin-partido-actions {
+                    width: 100%;
+                    justify-content: center;
+                }
+
+                .admin-liga-info, .admin-partido-info {
+                    width: 100%;
+                    text-align: center;
+                }
+
+                .cuota-input-group {
+                    padding: 12px;
+                }
+
+                .cuota-input {
+                    padding: 10px;
+                    font-size: 16px;
+                }
+
+                .form-section {
+                    padding: 15px;
+                }
+            }
+
+            @media (max-width: 480px) {
+                .admin-panel {
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100vh;
+                    max-height: 100vh;
+                    border-radius: 0;
+                    border: none;
+                }
+
+                .admin-panel-header h3 {
+                    font-size: 1rem;
+                }
+
+                .admin-btn {
+                    font-size: 13px;
+                    padding: 10px;
+                }
+
+                .cuotas-grid {
+                    grid-template-columns: 1fr;
+                }
+
+                .admin-section h4 {
+                    font-size: 0.9rem;
                 }
 
                 .dynamic-cuotas-grid {
                     grid-template-columns: 1fr;
                 }
 
-                .form-actions {
-                    flex-direction: column;
-                    gap: 10px;
+                .admin-input {
+                    font-size: 16px;
+                    padding: 14px;
                 }
             }
         `;        document.head.appendChild(styles);
@@ -1564,12 +1743,16 @@ class AdminPanel {
                     opacity: 1;
                     transform: translateY(0);
                 }
-            }
-
-            @media (max-width: 768px) {
+            }            @media (max-width: 768px) {
                 .edit-modal {
                     max-width: 95vw;
                     margin: 2% auto;
+                    min-width: auto;
+                }
+
+                .admin-modal-content.edit-modal {
+                    min-width: 95vw;
+                    max-width: 95vw;
                 }
 
                 .dynamic-cuotas-grid {
@@ -1578,10 +1761,64 @@ class AdminPanel {
 
                 .cuotas-actions {
                     flex-direction: column;
+                    gap: 8px;
                 }
 
                 .form-row {
                     grid-template-columns: 1fr;
+                    gap: 10px;
+                }
+
+                .edit-section {
+                    padding: 1rem;
+                    margin-bottom: 1rem;
+                }
+
+                .input-group {
+                    margin-bottom: 1rem;
+                }
+
+                .admin-btn-small {
+                    width: 100%;
+                    padding: 10px;
+                }
+
+                .cuota-input-group {
+                    padding: 0.8rem;
+                }
+
+                .cuota-input {
+                    padding: 10px;
+                    font-size: 16px;
+                }
+            }
+
+            @media (max-width: 480px) {
+                .edit-modal {
+                    max-width: 100vw;
+                    margin: 0;
+                    min-width: 100vw;
+                    height: 100vh;
+                    max-height: 100vh;
+                    border-radius: 0;
+                }
+
+                .admin-modal-content.edit-modal {
+                    min-width: 100vw;
+                    max-width: 100vw;
+                    height: 100vh;
+                    max-height: 100vh;
+                    border-radius: 0;
+                }
+
+                .edit-section h4 {
+                    font-size: 0.9rem;
+                }
+
+                .admin-close-btn {
+                    width: 40px;
+                    height: 40px;
+                    font-size: 20px;
                 }
             }
         `;
@@ -2509,10 +2746,65 @@ class AdminPanel {
                 color: var(--primary-color);
                 min-width: 100px;
             }
-            
-            .assignment-input {
+              .assignment-input {
                 width: 80px;
                 text-align: center;
+            }
+
+            /* Responsive para modales de plantilla */
+            @media (max-width: 768px) {
+                .template-types-grid {
+                    grid-template-columns: 1fr;
+                    gap: 8px;
+                }
+
+                .template-type-item {
+                    padding: 10px;
+                }
+
+                .custom-type-row {
+                    flex-direction: column;
+                    gap: 8px;
+                    align-items: stretch;
+                }
+
+                .template-assignment-grid {
+                    grid-template-columns: 1fr;
+                    gap: 10px;
+                }
+
+                .assignment-item {
+                    flex-direction: column;
+                    gap: 8px;
+                    text-align: center;
+                }
+
+                .assignment-label {
+                    min-width: auto;
+                }
+
+                .assignment-input {
+                    width: 100%;
+                    max-width: 120px;
+                    margin: 0 auto;
+                }
+            }
+
+            @media (max-width: 480px) {
+                .template-section {
+                    padding: 10px;
+                    margin-bottom: 15px;
+                }
+
+                .template-type-item {
+                    padding: 8px;
+                    font-size: 0.9rem;
+                }
+
+                .custom-type-input {
+                    padding: 10px;
+                    font-size: 16px;
+                }
             }
         `;
         document.head.appendChild(styles);
