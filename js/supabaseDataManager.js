@@ -2,8 +2,8 @@
 class SupabaseDataManager {
     constructor() {
         // Configuración de Supabase - CAMBIAR POR TUS VALORES
-        this.SUPABASE_URL = 'https://kpjvbmhqqmjigztpxpco.supabase.co'; // Ej: https://xxxxx.supabase.co
-        this.SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtwanZibWhxcW1qaWd6dHB4cGNvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg3OTczMjEsImV4cCI6MjA2NDM3MzMyMX0.YHu0KnbwAtE2F1qimZlIxxqu_kyhis9mx1qkoZSJsz4';
+        this.SUPABASE_URL = 'https://faqiotknhlrdsmwwcbar.supabase.co'; // Ej: https://xxxxx.supabase.co
+        this.SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZhcWlvdGtuaGxyZHNtd3djYmFyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg1MzUwMDYsImV4cCI6MjA2NDExMTAwNn0._BQOSpjX64dW7vayaqLHXjH9ld_pAFXFBHyi8AVumiU';
         
         this.supabase = null;
         this.isAuthenticated = false;
@@ -599,22 +599,20 @@ class SupabaseDataManager {
             console.error('Error obteniendo configuración:', error);
             return {};
         }
-    }
-
-    async updateConfiguracion(config) {
+    }    async updateConfiguracion(config) {
         if (!this.isAuthenticated) {
             throw new Error('No autorizado');
         }
 
         try {
             if (this.supabase) {
-                // Convertir objeto a array de registros
+                // Now that we have a UNIQUE constraint on clave, we can use upsert safely
                 const updates = Object.entries(config).map(([clave, valor]) => ({
                     clave,
-                    valor
+                    valor,
+                    updated_at: new Date().toISOString()
                 }));
 
-                // Usar upsert para insertar o actualizar
                 const { error } = await this.supabase
                     .from('configuracion')
                     .upsert(updates, {
@@ -916,11 +914,10 @@ class SupabaseDataManager {
             console.error('Error obteniendo configuración:', error);
             throw error;
         }
-    }
-
-    async updateConfiguration(clave, valor, descripcion = null) {
+    }    async updateConfiguration(clave, valor, descripcion = null) {
         try {
             if (this.supabase) {
+                // Now that we have a UNIQUE constraint on clave, we can use upsert safely
                 const { error } = await this.supabase
                     .from('configuracion')
                     .upsert({ 
@@ -928,6 +925,8 @@ class SupabaseDataManager {
                         valor, 
                         descripcion,
                         updated_at: new Date().toISOString()
+                    }, {
+                        onConflict: 'clave'
                     });
 
                 if (error) throw error;
@@ -944,11 +943,10 @@ class SupabaseDataManager {
             console.error('Error actualizando configuración:', error);
             throw error;
         }
-    }
-
-    async updateMultipleConfiguration(configs) {
+    }    async updateMultipleConfiguration(configs) {
         try {
             if (this.supabase) {
+                // Now that we have a UNIQUE constraint on clave, we can use bulk upsert safely
                 const updates = configs.map(config => ({
                     clave: config.clave,
                     valor: config.valor,
@@ -958,7 +956,9 @@ class SupabaseDataManager {
 
                 const { error } = await this.supabase
                     .from('configuracion')
-                    .upsert(updates);
+                    .upsert(updates, {
+                        onConflict: 'clave'
+                    });
 
                 if (error) throw error;
                 return true;
