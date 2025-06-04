@@ -184,8 +184,7 @@ class CartManager {    constructor() {
                     <div class="total-line">🏆 Total Apostado: $<span id="cart-final-total">0.00</span></div>
                 </div>                <div class="cart-actions">
                     <button onclick="cartManager.clearCart()" class="clear-btn">🗑️ Limpiar</button>
-                    <button onclick="cartManager.previewMessage()" class="preview-btn">👁️ Ver Mensaje</button>
-                    <button onclick="cartManager.sendWhatsApp()" class="whatsapp-btn">📱 Enviar</button>
+                    <button onclick="cartManager.sendWhatsApp()" class="whatsapp-btn">📱 Enviar por WhatsApp</button>
                 </div>
             </div>
         `;
@@ -369,44 +368,43 @@ class CartManager {    constructor() {
                 border-radius: 4px;
                 cursor: pointer;
                 font-size: 12px;
-            }
-
-            .cart-footer {
+            }            .cart-footer {
                 background: #2a2a2a;
-                padding: 20px;
+                padding: 8px;
                 border-top: 1px solid #333;
             }
 
             .cart-total {
                 background: #333;
-                padding: 15px;
-                border-radius: 8px;
-                margin-bottom: 15px;
+                padding: 6px;
+                border-radius: 6px;
+                margin-bottom: 6px;
                 text-align: center;
                 color: white;
+                font-size: 12px;
             }
 
             .cart-total div {
-                margin-bottom: 5px;
+                margin-bottom: 1px;
                 font-weight: bold;
-            }
-
-            .cart-actions {
+            }            .cart-actions {
                 display: flex;
-                gap: 10px;
-                flex-wrap: wrap;
+                gap: 3px;
+                flex-wrap: nowrap;
             }
 
             .cart-actions button {
                 flex: 1;
-                padding: 12px;
+                padding: 4px 6px;
                 border: none;
-                border-radius: 6px;
+                border-radius: 3px;
                 font-weight: bold;
                 cursor: pointer;
                 transition: background-color 0.3s ease;
-                min-width: 120px;
-            }            .clear-btn {
+                min-width: 60px;
+                font-size: 10px;
+                white-space: nowrap;
+            }.clear-btn {
                 background: #dc3545;
                 color: white;
             }
@@ -450,12 +448,170 @@ class CartManager {    constructor() {
 
             .bet-button.selected {
                 background: #28a745;
-            }
-
-            @media (max-width: 600px) {
+            }            /* Mejoras responsive para móviles */
+            @media (max-width: 768px) {
                 .cart-container {
                     width: 100vw;
                     right: -100vw;
+                }
+                
+                .cart-header {
+                    padding: 12px 15px;
+                }
+                
+                .cart-header h3 {
+                    font-size: 1rem;
+                }
+                
+                .cart-close {
+                    width: 30px;
+                    height: 30px;
+                    font-size: 18px;
+                }
+                
+                .tab-btn {
+                    padding: 12px 10px;
+                    font-size: 12px;
+                }
+                  .cart-footer {
+                    padding: 8px;
+                }
+                
+                .cart-total {
+                    padding: 6px;
+                    margin-bottom: 6px;
+                    font-size: 12px;
+                }
+                
+                .cart-total div {
+                    margin-bottom: 1px;
+                }
+                  .cart-actions button {
+                    padding: 6px 4px;
+                    font-size: 10px;
+                    min-width: 50px;
+                }
+                    font-size: 14px;
+                    min-height: 50px;
+                }
+                
+                .cart-item {
+                    padding: 12px;
+                    margin-bottom: 8px;
+                }
+                
+                .item-amount {
+                    flex-direction: column;
+                    align-items: stretch;
+                    gap: 8px;
+                }
+                
+                .item-amount label {
+                    font-size: 14px;
+                }
+                
+                .item-amount input {
+                    padding: 12px;
+                    font-size: 16px; /* Evita zoom en iOS */
+                    width: 100%;
+                    min-height: 44px; /* Touch target mínimo */
+                }
+                
+                .cart-footer {
+                    padding: 15px;
+                }
+                  .cart-actions {
+                    flex-direction: row;
+                    gap: 8px;
+                }
+                
+                .cart-actions button {
+                    min-width: auto;
+                    padding: 8px;
+                    font-size: 12px;
+                    min-height: 36px;
+                }.cart-controls {
+                    padding: 6px;
+                }
+                
+                .combination-btn, .create-combination-btn {
+                    padding: 8px 10px;
+                    font-size: 11px;
+                    min-height: 36px;
+                }
+                
+                .combination-amount {
+                    flex-direction: column;
+                    align-items: stretch;
+                    gap: 10px;
+                }
+                
+                .combination-amount input {
+                    width: 100%;
+                    padding: 12px;
+                    font-size: 16px;
+                    min-height: 44px;
+                }
+                
+                .notification {
+                    top: 10px;
+                    right: 10px;
+                    left: 10px;
+                    max-width: none;
+                    padding: 15px;
+                    font-size: 14px;
+                }
+            }
+            
+            @media (max-width: 480px) {
+                .cart-header h3 {
+                    font-size: 1rem;
+                }
+                
+                .tab-btn {
+                    padding: 12px 8px;
+                    font-size: 13px;
+                }
+                
+                .cart-item {
+                    padding: 10px;
+                }
+                
+                .item-league {
+                    font-size: 11px;
+                }
+                
+                .item-match {
+                    font-size: 14px;
+                    margin-bottom: 8px;
+                }
+                
+                .item-bet {
+                    font-size: 13px;
+                }
+                  .cart-total {
+                    padding: 8px;
+                    font-size: 12px;
+                }
+                  .cart-actions button {
+                    padding: 8px;
+                    font-size: 11px;
+                }
+                
+                .combination-item {
+                    padding: 8px;
+                }
+                
+                .combination-title {
+                    font-size: 12px;
+                }
+                
+                .combination-bet {
+                    font-size: 11px;
+                }
+                  .combination-odds {
+                    font-size: 12px;
+                    padding: 6px;
                 }
             }
 
@@ -624,23 +780,21 @@ class CartManager {    constructor() {
                 padding: 4px 8px;
                 border-radius: 4px;
                 font-size: 12px;
-            }
-
-            /* Estilos para combinaciones */
+            }            /* Estilos para combinaciones */
             .cart-controls {
-                padding: 10px;
+                padding: 6px;
                 border-bottom: 1px solid #333;
                 background: #2a2a2a;
             }            .combination-btn {
                 background: linear-gradient(45deg, #007bff, #0056b3);
                 color: white;
                 border: none;
-                padding: 10px 15px;
-                border-radius: 8px;
+                padding: 6px 10px;
+                border-radius: 6px;
                 cursor: pointer;
-                font-size: 13px;
+                font-size: 11px;
                 font-weight: bold;
-                margin-right: 8px;
+                margin-right: 6px;
                 transition: all 0.3s ease;
                 box-shadow: 0 2px 4px rgba(0, 123, 255, 0.3);
             }
@@ -664,10 +818,10 @@ class CartManager {    constructor() {
                 background: linear-gradient(45deg, #28a745, #20c997);
                 color: white;
                 border: none;
-                padding: 10px 15px;
-                border-radius: 8px;
+                padding: 6px 10px;
+                border-radius: 6px;
                 cursor: pointer;
-                font-size: 13px;
+                font-size: 11px;
                 font-weight: bold;
                 transition: all 0.3s ease;
                 box-shadow: 0 2px 4px rgba(40, 167, 69, 0.3);
@@ -743,26 +897,22 @@ class CartManager {    constructor() {
                 color: #666;
                 font-style: italic;
                 font-size: 14px;
-            }
-
-            .combination-item {
+            }            .combination-item {
                 background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
-                margin-bottom: 15px;
-                padding: 15px;
-                border-radius: 8px;
+                margin-bottom: 8px;
+                padding: 10px;
+                border-radius: 6px;
                 border: 2px solid #007bff;
                 box-shadow: 0 4px 12px rgba(0, 123, 255, 0.2);
-            }
-
-            .combination-header {
+            }            .combination-header {
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
-                margin-bottom: 10px;
+                margin-bottom: 6px;
             }            .combination-title {
                 color: #28a745;
                 font-weight: bold;
-                font-size: 16px;
+                font-size: 13px;
             }
 
             .remove-combination {
@@ -777,10 +927,8 @@ class CartManager {    constructor() {
                 display: flex;
                 align-items: center;
                 justify-content: center;
-            }
-
-            .combination-details {
-                margin-bottom: 10px;
+            }            .combination-details {
+                margin-bottom: 6px;
             }
 
             .combination-bet {
@@ -791,12 +939,12 @@ class CartManager {    constructor() {
             }            .combination-odds {
                 color: #ffc107;
                 font-weight: bold;
-                margin-bottom: 10px;
+                margin-bottom: 6px;
                 text-align: center;
                 background: #333;
-                padding: 10px;
-                border-radius: 6px;
-                font-size: 16px;
+                padding: 6px;
+                border-radius: 4px;
+                font-size: 13px;
             }
 
             .combination-amount {
@@ -827,13 +975,11 @@ class CartManager {    constructor() {
                 font-size: 12px;
                 margin-top: 5px;
                 width: 100%;
-            }
-
-            .total-line {
+            }            .total-line {
                 border-top: 1px solid #555;
-                padding-top: 8px;
-                margin-top: 8px;
-                font-size: 16px;
+                padding-top: 3px;
+                margin-top: 3px;
+                font-size: 13px;
                 color: #ff6b00;
             }
         `;document.head.appendChild(styles);
@@ -1316,15 +1462,67 @@ class CartManager {    constructor() {
                     font-size: 24px;
                     cursor: pointer;
                     padding: 0;
-                }
-
-                .preview-body {
+                }                .preview-body {
                     padding: 20px;
                     overflow-y: auto;
                     max-height: calc(90vh - 60px);
                     color: white;
                     line-height: 1.5;
                     white-space: pre-wrap;
+                }
+                
+                /* Responsive para modal de vista previa */
+                @media (max-width: 768px) {
+                    .preview-content {
+                        width: 95%;
+                        max-height: 95vh;
+                        margin: 0 10px;
+                    }
+                    
+                    .preview-header {
+                        padding: 12px 15px;
+                    }
+                    
+                    .preview-header h3 {
+                        font-size: 1rem;
+                    }
+                    
+                    .preview-close {
+                        font-size: 20px;
+                        padding: 5px;
+                        min-width: 35px;
+                        min-height: 35px;
+                    }
+                    
+                    .preview-body {
+                        padding: 15px;
+                        font-size: 14px;
+                        max-height: calc(95vh - 50px);
+                    }
+                }
+                
+                @media (max-width: 480px) {
+                    .preview-content {
+                        width: 100%;
+                        height: 100%;
+                        max-height: 100vh;
+                        border-radius: 0;
+                        margin: 0;
+                    }
+                    
+                    .preview-header {
+                        padding: 10px 15px;
+                    }
+                    
+                    .preview-header h3 {
+                        font-size: 0.9rem;
+                    }
+                    
+                    .preview-body {
+                        padding: 12px;
+                        font-size: 13px;
+                        max-height: calc(100vh - 45px);
+                    }
                 }
             `;
             document.head.appendChild(styles);
