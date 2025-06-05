@@ -1,9 +1,8 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <!--test-->
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, minimum-scale=0.25, maximum-scale=3.0">
     <title>Reglamento - La Jugada Prohibida</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
@@ -16,7 +15,7 @@
             line-height: 1.6;
         }
         .container {
-            max-width: 800px;
+            max-width: 1000px;
             margin: 0 auto;
             padding: 20px;
         }
@@ -33,18 +32,73 @@
             border-left: 4px solid #ff5722;
             padding-left: 10px;
         }
+        h3 {
+            color: #25D366;
+            margin-top: 30px;
+        }
+        
+        /* Estilos para las pestañas */
+        .tabs-container {
+            margin: 30px 0;
+        }
+        
+        .tabs-nav {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #333;
+        }
+        
+        .tab-button {
+            background: #333;
+            color: #fff;
+            border: none;
+            padding: 12px 20px;
+            cursor: pointer;
+            border-radius: 8px 8px 0 0;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+        }
+        
+        .tab-button:hover {
+            background: #555;
+        }
+        
+        .tab-button.active {
+            background: #ff5722;
+            color: white;
+        }
+        
+        .tab-content {
+            display: none;
+            background: #1a1a1a;
+            padding: 25px;
+            border-radius: 0 8px 8px 8px;
+            border: 1px solid #333;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        /* Estilos existentes */
         ul {
             padding-left: 20px;
         }
         li {
-            margin-bottom: 8px;
+            margin-bottom: 12px;
         }
         .ejemplo {
             background-color: #333;
-            padding: 12px;
-            border-radius: 5px;
+            padding: 15px;
+            border-radius: 8px;
             margin: 15px 0;
-            border-left: 3px solid #25D366;
+            border-left: 4px solid #25D366;
         }
         .volver-btn {
             display: inline-block;
@@ -63,10 +117,63 @@
         .section {
             margin-bottom: 40px;
             padding-bottom: 20px;
-            border-bottom: 1px solid #333;
         }
         strong {
             color: #ff5722;
+        }
+        
+        /* Estilos para consideraciones generales */
+        .consideraciones-generales {
+            background: linear-gradient(135deg, #2a2a2a, #1a1a1a);
+            border: 2px solid #ff5722;
+            border-radius: 10px;
+            padding: 25px;
+            margin: 30px 0;
+        }
+        
+        .consideraciones-generales h2 {
+            color: #ff5722;
+            text-align: center;
+            margin-bottom: 25px;
+            border: none;
+            padding: 0;
+        }
+        
+        .consideracion-item {
+            background: #333;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 8px;
+            border-left: 4px solid #ffc107;
+        }
+        
+        .consideracion-item h4 {
+            color: #ffc107;
+            margin: 0 0 10px 0;
+        }
+        
+        .sport-icon {
+            font-size: 18px;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .tabs-nav {
+                flex-direction: column;
+            }
+            
+            .tab-button {
+                border-radius: 5px;
+                margin-bottom: 5px;
+            }
+            
+            .tab-content {
+                border-radius: 8px;
+            }
+            
+            .container {
+                padding: 10px;
+            }
         }
     </style>
 </head>
@@ -76,188 +183,367 @@
             <i class="fas fa-arrow-left"></i> Volver a Apuestas
         </a>
 
-        <h1>REGLAMENTO GENERAL DE LA CASA DE APUESTAS</h1>
+        <h1><i class="fas fa-gavel"></i> REGLAMENTO GENERAL DE LA CASA DE APUESTAS</h1>
 
-        <div class="section">
-            <h2>1. RESULTADO FINAL (1, X, 2)</h2>
-            <p>Se apuesta al resultado final del partido:</p>
-            <ul>
-                <li><strong>1</strong> → Victoria del equipo local (Ej: Barcelona)</li>
-                <li><strong>X</strong> → Empate</li>
-                <li><strong>2</strong> → Victoria del equipo visitante (Ej: Real Madrid)</li>
-            </ul>
-            <div class="ejemplo">
-                <strong>Ejemplo:</strong><br>
-                Si apuestas al "1" en un Barcelona vs Real Madrid y el partido termina 2-1, ganas la apuesta.
-            </div>
-        </div>
-
-        <div class="section">
-            <h2>2. DOBLE OPORTUNIDAD (1X, X2, 12)</h2>
-            <p>Permite cubrir dos de los tres posibles resultados.</p>
-            <ul>
-                <li><strong>1X</strong> → Ganas si gana Barcelona o empatan</li>
-                <li><strong>X2</strong> → Ganas si empatan o gana Real Madrid</li>
-                <li><strong>12</strong> → Ganas si gana cualquiera de los dos (no sirve el empate)</li>
-            </ul>
-            <div class="ejemplo">
-                <strong>Ejemplo:</strong><br>
-                Si apuestas 1X y el partido termina 2-2, ganas. Si termina 1-0 también ganas. Si gana Real Madrid, pierdes.
-            </div>
-        </div>
-
-        <div class="section">
-            <h2>3. GOLES: UNDER/OVER (1.5, 2.5, 3.5)</h2>
-            <p>Se apuesta al total de goles en el partido, sin importar quién los anote.</p>
-            <ul>
-                <li><strong>U</strong> → "Under" (menos de)</li>
-                <li><strong>O</strong> → "Over" (más de)</li>
-            </ul>
-            <p><strong>Tipos:</strong></p>
-            <ul>
-                <li>U 1.5 → Menos de 2 goles</li>
-                <li>O 1.5 → 2 o más goles</li>
-                <li>U 2.5 → Menos de 3 goles</li>
-                <li>O 2.5 → 3 o más goles</li>
-                <li>U 3.5 → Menos de 4 goles</li>
-                <li>O 3.5 → 4 o más goles</li>
-            </ul>
-            <div class="ejemplo">
-                <strong>Ejemplo:</strong><br>
-                Si apuestas O 2.5 en Barcelona vs Real Madrid y el partido termina 2-2, ganas (4 goles).
-            </div>
-        </div>
-
-        <div class="section">
-            <h2>4. ¿AMBOS EQUIPOS MARCAN? (G / NG)</h2>
-            <p>Se apuesta a si ambos equipos anotarán al menos un gol.</p>
-            <ul>
-                <li><strong>G</strong> → Sí (Gol de ambos equipos)</li>
-                <li><strong>NG</strong> → No (Uno o los dos no marcan)</li>
-            </ul>
-            <div class="ejemplo">
-                <strong>Ejemplo:</strong><br>
-                <strong>G:</strong> Si el partido queda 2-1, ganas (marcaron los dos).<br>
-                <strong>NG:</strong> Si termina 3-0 o 0-0, ganas (uno o ninguno marcó).
-            </div>        </div>
-
-        <div class="section">
-            <h2>5. ⚾ JUGADAS DISPONIBLES BÉISBOL</h2>
+        <!-- Consideraciones Generales -->
+        <div class="consideraciones-generales">
+            <h2><i class="fas fa-exclamation-triangle"></i> CONSIDERACIONES GENERALES</h2>
             
-            <h3 style="color: #25D366; margin-top: 30px;">🏆 RESULTADO FINAL</h3>
-            <ul>
-                <li><strong>🏠 1 (Gana el equipo local – Resultado final)</strong><br>
-                    Se apuesta a que el equipo local ganará el partido al finalizar las 9 entradas.
-                    <div class="ejemplo">
-                        <strong>Ejemplo:</strong> Resultado final 5-3 a favor del local → apuesta ganadora.
-                    </div>
-                </li>
-                <li><strong>🧳 2 (Gana el equipo visitante – Resultado final)</strong><br>
-                    Se apuesta a que el equipo visitante ganará el partido al finalizar las 9 entradas.
-                    <div class="ejemplo">
-                        <strong>Ejemplo:</strong> Resultado final 4-6 a favor del visitante → apuesta ganadora.
-                    </div>
-                </li>
-            </ul>
+            <div class="consideracion-item">
+                <h4><i class="fas fa-clock"></i> 1. Tiempo Reglamentario</h4>
+                <p>Todas las apuestas están basadas en el tiempo reglamentario del partido:</p>
+                <ul>
+                    <li><strong>⚽ Fútbol:</strong> 90 minutos más descuento</li>
+                    <li><strong>⚾ Béisbol:</strong> 9 entradas (o 8.5 si el local gana)</li>
+                    <li><strong>🏀 Baloncesto:</strong> 4 cuartos (los puntos de prórroga no cuentan, salvo que se indique lo contrario)</li>
+                </ul>
+            </div>
 
-            <h3 style="color: #25D366; margin-top: 30px;">📊 TOTAL DE CARRERAS (PARTIDO COMPLETO)</h3>
-            <ul>
-                <li><strong>🔼 Más de 8.5 (Total Partido)</strong><br>
-                    Se apuesta a que entre ambos equipos se anotarán 9 o más carreras en total.
-                    <div class="ejemplo">
-                        <strong>Ejemplo:</strong> Resultado final 6-4 = 10 carreras → apuesta ganadora.
-                    </div>
-                </li>
-                <li><strong>🔽 Menos de 8.5 (Total Partido)</strong><br>
-                    Se apuesta a que entre ambos equipos se anotarán 8 o menos carreras en total.
-                    <div class="ejemplo">
-                        <strong>Ejemplo:</strong> Resultado final 4-3 = 7 carreras → apuesta ganadora.
-                    </div>
-                </li>
-                <li><strong>🔼 Más de 9.5 (Total Partido)</strong><br>
-                    Se apuesta a que entre ambos equipos se anotarán 10 o más carreras.
-                    <div class="ejemplo">
-                        <strong>Ejemplo:</strong> Resultado final 7-5 = 12 carreras → apuesta ganadora.
-                    </div>
-                </li>
-                <li><strong>🔽 Menos de 9.5 (Total Partido)</strong><br>
-                    Se apuesta a que entre ambos equipos se anotarán 9 o menos carreras.
-                    <div class="ejemplo">
-                        <strong>Ejemplo:</strong> Resultado final 5-4 = 9 carreras → apuesta ganadora.
-                    </div>
-                </li>
-            </ul>
+            <div class="consideracion-item">
+                <h4><i class="fas fa-chart-line"></i> 2. Jugadas Parciales</h4>
+                <p>Para jugadas por mitades, cuartos o entradas parciales, solo se contabiliza lo ocurrido en ese tramo del juego.</p>
+                <div class="ejemplo">
+                    <strong>Ejemplos:</strong><br>
+                    • Una apuesta al 1er cuarto en NBA solo considera lo que ocurra en ese período<br>
+                    • En Béisbol, apuestas a la 1ª parte requieren al menos 5 entradas completas
+                </div>
+            </div>
 
-            <h3 style="color: #25D366; margin-top: 30px;">🎯 PRIMERA PARTE (5 ENTRADAS)</h3>
-            <ul>
-                <li><strong>🥇 1 (Gana 1ª Parte – 5 entradas)</strong><br>
-                    Se apuesta a que el equipo local estará ganando al finalizar la 5ª entrada.
-                    <div class="ejemplo">
-                        <strong>Ejemplo:</strong> Después de 5 entradas el local gana 3-1 → apuesta ganadora.
-                    </div>
-                </li>
-                <li><strong>🤝 X (Empate 1ª Parte – 5 entradas)</strong><br>
-                    Se apuesta a que ambos equipos estarán empatados al final de la 5ª entrada.
-                    <div class="ejemplo">
-                        <strong>Ejemplo:</strong> Después de 5 entradas, marcador 2-2 → apuesta ganadora.
-                    </div>
-                </li>
-                <li><strong>🥈 2 (Gana 1ª Parte – 5 entradas)</strong><br>
-                    Se apuesta a que el visitante estará ganando al finalizar la 5ª entrada.
-                    <div class="ejemplo">
-                        <strong>Ejemplo:</strong> Después de 5 entradas el visitante gana 4-1 → apuesta ganadora.
-                    </div>
-                </li>
-            </ul>
+            <div class="consideracion-item">
+                <h4><i class="fas fa-edit"></i> 3. Errores de Cuotas</h4>
+                <p>En caso de errores evidentes de tipeo o digitación en alguna cuota (por ejemplo, una cuota claramente desproporcionada con el resto del mercado), la empresa se reserva el derecho de corregirla y validar la apuesta con la cuota adecuada. Si el cliente no está de acuerdo, puede optar por anularla.</p>
+            </div>
 
-            <h3 style="color: #25D366; margin-top: 30px;">📈 TOTAL DE CARRERAS (PRIMERA PARTE)</h3>
-            <ul>
-                <li><strong>🔼 Más de 4.5 (Total 1ª Parte – 5 entradas)</strong><br>
-                    Se apuesta a que habrá 5 o más carreras totales en las primeras 5 entradas.
-                    <div class="ejemplo">
-                        <strong>Ejemplo:</strong> Marcador tras 5 entradas: 3-3 = 6 carreras → apuesta ganadora.
-                    </div>
-                </li>
-                <li><strong>🔽 Menos de 4.5 (Total 1ª Parte – 5 entradas)</strong><br>
-                    Se apuesta a que habrá 4 o menos carreras totales en las primeras 5 entradas.
-                    <div class="ejemplo">
-                        <strong>Ejemplo:</strong> Marcador tras 5 entradas: 2-1 = 3 carreras → apuesta ganadora.
-                    </div>
-                </li>
-                <li><strong>🔼 Más de 5.5 (Total 1ª Parte – 5 entradas)</strong><br>
-                    Se apuesta a que habrá 6 o más carreras en las primeras 5 entradas.
-                    <div class="ejemplo">
-                        <strong>Ejemplo:</strong> Marcador tras 5 entradas: 4-3 = 7 carreras → apuesta ganadora.
-                    </div>
-                </li>
-                <li><strong>🔽 Menos de 5.5 (Total 1ª Parte – 5 entradas)</strong><br>
-                    Se apuesta a que habrá 5 o menos carreras en las primeras 5 entradas.
-                    <div class="ejemplo">
-                        <strong>Ejemplo:</strong> Marcador tras 5 entradas: 3-2 = 5 carreras → apuesta ganadora.
-                    </div>
-                </li>
-            </ul>
+            <div class="consideracion-item">
+                <h4><i class="fas fa-pause-circle"></i> 4. Partidos Suspendidos</h4>
+                <ul>
+                    <li>Las apuestas serán <strong>anuladas</strong> si el evento no alcanza el mínimo requerido (ej.: 9 entradas completas en Béisbol)</li>
+                    <li>Si el partido se <strong>reanuda dentro de 24 horas</strong>, las apuestas originales se mantienen activas</li>
+                    <li>Si se supera ese tiempo, deberán realizarse <strong>nuevas apuestas</strong> cuando el partido comience</li>
+                </ul>
+            </div>
 
-            <h3 style="color: #25D366; margin-top: 30px;">⚾ TOTAL DE HITS</h3>
-            <ul>
-                <li><strong>⚾ Par (Total de Hits – Partido completo)</strong><br>
-                    Se apuesta a que la suma total de hits entre los dos equipos será un número par.
+            <div class="consideracion-item">
+                <h4><i class="fas fa-lock"></i> 5. Cuotas Fijas</h4>
+                <p>Todas las cuotas son <strong>fijas al momento de realizar la apuesta</strong>.</p>
+            </div>
+        </div>
+
+        <!-- Sistema de Pestañas -->
+        <div class="tabs-container">
+            <div class="tabs-nav">
+                <button class="tab-button active" onclick="showTab('futbol')">
+                    <i class="fas fa-futbol sport-icon"></i>
+                    Fútbol
+                </button>
+                <button class="tab-button" onclick="showTab('beisbol')">
+                    <i class="fas fa-baseball-ball sport-icon"></i>
+                    Béisbol
+                </button>
+                <button class="tab-button" onclick="showTab('baloncesto')">
+                    <i class="fas fa-basketball-ball sport-icon"></i>
+                    Baloncesto
+                </button>
+            </div>
+
+            <!-- TAB FÚTBOL -->
+            <div id="futbol" class="tab-content active">
+                <h2><i class="fas fa-futbol"></i> REGLAS DE FÚTBOL</h2>
+
+                <div class="section">
+                    <h3>1. RESULTADO FINAL (1, X, 2)</h3>
+                    <p>Se apuesta al resultado final del partido:</p>
+                    <ul>
+                        <li><strong>1</strong> → Victoria del equipo local (Ej: Barcelona)</li>
+                        <li><strong>X</strong> → Empate</li>
+                        <li><strong>2</strong> → Victoria del equipo visitante (Ej: Real Madrid)</li>
+                    </ul>
                     <div class="ejemplo">
-                        <strong>Ejemplo:</strong> Equipo A: 8 hits, Equipo B: 10 hits = 18 → apuesta ganadora.
+                        <strong>Ejemplo:</strong><br>
+                        Si apuestas al "1" en un Barcelona vs Real Madrid y el partido termina 2-1, ganas la apuesta.
                     </div>
-                </li>
-                <li><strong>⚾ Impar (Total de Hits – Partido completo)</strong><br>
-                    Se apuesta a que la suma total de hits entre los dos equipos será un número impar.
+                </div>
+
+                <div class="section">
+                    <h3>2. DOBLE OPORTUNIDAD (1X, X2, 12)</h3>
+                    <p>Permite cubrir dos de los tres posibles resultados.</p>
+                    <ul>
+                        <li><strong>1X</strong> → Ganas si gana Barcelona o empatan</li>
+                        <li><strong>X2</strong> → Ganas si empatan o gana Real Madrid</li>
+                        <li><strong>12</strong> → Ganas si gana cualquiera de los dos (no sirve el empate)</li>
+                    </ul>
                     <div class="ejemplo">
-                        <strong>Ejemplo:</strong> Equipo A: 7 hits, Equipo B: 6 hits = 13 → apuesta ganadora.
+                        <strong>Ejemplo:</strong><br>
+                        Si apuestas 1X y el partido termina 2-2, ganas. Si termina 1-0 también ganas. Si gana Real Madrid, pierdes.
                     </div>
-                </li>
-            </ul>
+                </div>
+
+                <div class="section">
+                    <h3>3. GOLES: UNDER/OVER (1.5, 2.5, 3.5)</h3>
+                    <p>Se apuesta al total de goles en el partido, sin importar quién los anote.</p>
+                    <ul>
+                        <li><strong>U</strong> → "Under" (menos de)</li>
+                        <li><strong>O</strong> → "Over" (más de)</li>
+                    </ul>
+                    <p><strong>Tipos:</strong></p>
+                    <ul>
+                        <li>U 1.5 → Menos de 2 goles</li>
+                        <li>O 1.5 → 2 o más goles</li>
+                        <li>U 2.5 → Menos de 3 goles</li>
+                        <li>O 2.5 → 3 o más goles</li>
+                        <li>U 3.5 → Menos de 4 goles</li>
+                        <li>O 3.5 → 4 o más goles</li>
+                    </ul>
+                    <div class="ejemplo">
+                        <strong>Ejemplo:</strong><br>
+                        Si apuestas O 2.5 en Barcelona vs Real Madrid y el partido termina 2-2, ganas (4 goles).
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h3>4. ¿AMBOS EQUIPOS MARCAN? (G / NG)</h3>
+                    <p>Se apuesta a si ambos equipos anotarán al menos un gol.</p>
+                    <ul>
+                        <li><strong>G</strong> → Sí (Gol de ambos equipos)</li>
+                        <li><strong>NG</strong> → No (Uno o los dos no marcan)</li>
+                    </ul>
+                    <div class="ejemplo">
+                        <strong>Ejemplo:</strong><br>
+                        <strong>G:</strong> Si el partido queda 2-1, ganas (marcaron los dos).<br>
+                        <strong>NG:</strong> Si termina 3-0 o 0-0, ganas (uno o ninguno marcó).
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB BÉISBOL -->
+            <div id="beisbol" class="tab-content">
+                <h2><i class="fas fa-baseball-ball"></i> REGLAS DE BÉISBOL</h2>
+                
+                <div class="section">
+                    <h3>🏆 RESULTADO FINAL</h3>
+                    <ul>
+                        <li><strong>🏠 1 (Gana el equipo local – Resultado final)</strong><br>
+                            Se apuesta a que el equipo local ganará el partido al finalizar las 9 entradas.
+                            <div class="ejemplo">
+                                <strong>Ejemplo:</strong> Resultado final 5-3 a favor del local → apuesta ganadora.
+                            </div>
+                        </li>
+                        <li><strong>🧳 2 (Gana el equipo visitante – Resultado final)</strong><br>
+                            Se apuesta a que el equipo visitante ganará el partido al finalizar las 9 entradas.
+                            <div class="ejemplo">
+                                <strong>Ejemplo:</strong> Resultado final 4-6 a favor del visitante → apuesta ganadora.
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="section">
+                    <h3>📊 TOTAL DE CARRERAS (PARTIDO COMPLETO)</h3>
+                    <ul>
+                        <li><strong>🔼 Más de 8.5 (Total Partido)</strong><br>
+                            Se apuesta a que entre ambos equipos se anotarán 9 o más carreras en total.
+                            <div class="ejemplo">
+                                <strong>Ejemplo:</strong> Resultado final 6-4 = 10 carreras → apuesta ganadora.
+                            </div>
+                        </li>
+                        <li><strong>🔽 Menos de 8.5 (Total Partido)</strong><br>
+                            Se apuesta a que entre ambos equipos se anotarán 8 o menos carreras en total.
+                            <div class="ejemplo">
+                                <strong>Ejemplo:</strong> Resultado final 4-3 = 7 carreras → apuesta ganadora.
+                            </div>
+                        </li>
+                        <li><strong>🔼 Más de 9.5 (Total Partido)</strong><br>
+                            Se apuesta a que entre ambos equipos se anotarán 10 o más carreras.
+                            <div class="ejemplo">
+                                <strong>Ejemplo:</strong> Resultado final 7-5 = 12 carreras → apuesta ganadora.
+                            </div>
+                        </li>
+                        <li><strong>🔽 Menos de 9.5 (Total Partido)</strong><br>
+                            Se apuesta a que entre ambos equipos se anotarán 9 o menos carreras.
+                            <div class="ejemplo">
+                                <strong>Ejemplo:</strong> Resultado final 5-4 = 9 carreras → apuesta ganadora.
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="section">
+                    <h3>🎯 PRIMERA PARTE (5 ENTRADAS)</h3>
+                    <ul>
+                        <li><strong>🥇 1 (Gana 1ª Parte – 5 entradas)</strong><br>
+                            Se apuesta a que el equipo local estará ganando al finalizar la 5ª entrada.
+                            <div class="ejemplo">
+                                <strong>Ejemplo:</strong> Después de 5 entradas el local gana 3-1 → apuesta ganadora.
+                            </div>
+                        </li>
+                        <li><strong>🤝 X (Empate 1ª Parte – 5 entradas)</strong><br>
+                            Se apuesta a que ambos equipos estarán empatados al final de la 5ª entrada.
+                            <div class="ejemplo">
+                                <strong>Ejemplo:</strong> Después de 5 entradas, marcador 2-2 → apuesta ganadora.
+                            </div>
+                        </li>
+                        <li><strong>🥈 2 (Gana 1ª Parte – 5 entradas)</strong><br>
+                            Se apuesta a que el visitante estará ganando al finalizar la 5ª entrada.
+                            <div class="ejemplo">
+                                <strong>Ejemplo:</strong> Después de 5 entradas el visitante gana 4-1 → apuesta ganadora.
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="section">
+                    <h3>📈 TOTAL DE CARRERAS (PRIMERA PARTE)</h3>
+                    <ul>
+                        <li><strong>🔼 Más de 4.5 (Total 1ª Parte – 5 entradas)</strong><br>
+                            Se apuesta a que habrá 5 o más carreras totales en las primeras 5 entradas.
+                            <div class="ejemplo">
+                                <strong>Ejemplo:</strong> Marcador tras 5 entradas: 3-3 = 6 carreras → apuesta ganadora.
+                            </div>
+                        </li>
+                        <li><strong>🔽 Menos de 4.5 (Total 1ª Parte – 5 entradas)</strong><br>
+                            Se apuesta a que habrá 4 o menos carreras totales en las primeras 5 entradas.
+                            <div class="ejemplo">
+                                <strong>Ejemplo:</strong> Marcador tras 5 entradas: 2-1 = 3 carreras → apuesta ganadora.
+                            </div>
+                        </li>
+                        <li><strong>🔼 Más de 5.5 (Total 1ª Parte – 5 entradas)</strong><br>
+                            Se apuesta a que habrá 6 o más carreras en las primeras 5 entradas.
+                            <div class="ejemplo">
+                                <strong>Ejemplo:</strong> Marcador tras 5 entradas: 4-3 = 7 carreras → apuesta ganadora.
+                            </div>
+                        </li>
+                        <li><strong>🔽 Menos de 5.5 (Total 1ª Parte – 5 entradas)</strong><br>
+                            Se apuesta a que habrá 5 o menos carreras en las primeras 5 entradas.
+                            <div class="ejemplo">
+                                <strong>Ejemplo:</strong> Marcador tras 5 entradas: 3-2 = 5 carreras → apuesta ganadora.
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="section">
+                    <h3>⚾ TOTAL DE HITS</h3>
+                    <ul>
+                        <li><strong>⚾ Par (Total de Hits – Partido completo)</strong><br>
+                            Se apuesta a que la suma total de hits entre los dos equipos será un número par.
+                            <div class="ejemplo">
+                                <strong>Ejemplo:</strong> Equipo A: 8 hits, Equipo B: 10 hits = 18 → apuesta ganadora.
+                            </div>
+                        </li>
+                        <li><strong>⚾ Impar (Total de Hits – Partido completo)</strong><br>
+                            Se apuesta a que la suma total de hits entre los dos equipos será un número impar.
+                            <div class="ejemplo">
+                                <strong>Ejemplo:</strong> Equipo A: 7 hits, Equipo B: 6 hits = 13 → apuesta ganadora.
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- TAB BALONCESTO -->
+            <div id="baloncesto" class="tab-content">
+                <h2><i class="fas fa-basketball-ball"></i> REGLAS DE BALONCESTO</h2>
+                
+                <div class="section">
+                    <h3>🏆 RESULTADO FINAL (1, 2)</h3>
+                    <ul>
+                        <li><strong>🏠 1 (Gana el equipo local)</strong><br>
+                            Se apuesta a que el equipo local ganará el partido al finalizar los 4 cuartos.
+                            <div class="ejemplo">
+                                <strong>Ejemplo:</strong> Resultado final 105-98 a favor del local → apuesta ganadora.
+                            </div>
+                        </li>
+                        <li><strong>🧳 2 (Gana el equipo visitante)</strong><br>
+                            Se apuesta a que el equipo visitante ganará el partido al finalizar los 4 cuartos.
+                            <div class="ejemplo">
+                                <strong>Ejemplo:</strong> Resultado final 92-110 a favor del visitante → apuesta ganadora.
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="section">
+                    <h3>📊 TOTAL DE PUNTOS (PARTIDO COMPLETO)</h3>
+                    <ul>
+                        <li><strong>🔼 Más de 210.5 (Total Partido)</strong><br>
+                            Se apuesta a que entre ambos equipos se anotarán 211 o más puntos en total.
+                            <div class="ejemplo">
+                                <strong>Ejemplo:</strong> Resultado final 108-105 = 213 puntos → apuesta ganadora.
+                            </div>
+                        </li>
+                        <li><strong>🔽 Menos de 210.5 (Total Partido)</strong><br>
+                            Se apuesta a que entre ambos equipos se anotarán 210 o menos puntos en total.
+                            <div class="ejemplo">
+                                <strong>Ejemplo:</strong> Resultado final 95-92 = 187 puntos → apuesta ganadora.
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="section">
+                    <h3>🎯 PRIMER CUARTO</h3>
+                    <ul>
+                        <li><strong>🥇 1 (Gana 1er Cuarto)</strong><br>
+                            Se apuesta a que el equipo local estará ganando al finalizar el primer cuarto.
+                            <div class="ejemplo">
+                                <strong>Ejemplo:</strong> 1er cuarto: Local 28 - Visitante 22 → apuesta ganadora.
+                            </div>
+                        </li>
+                        <li><strong>🥈 2 (Gana 1er Cuarto)</strong><br>
+                            Se apuesta a que el visitante estará ganando al finalizar el primer cuarto.
+                            <div class="ejemplo">
+                                <strong>Ejemplo:</strong> 1er cuarto: Local 20 - Visitante 27 → apuesta ganadora.
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="section">
+                    <h3>📈 TOTAL DE PUNTOS (PRIMER CUARTO)</h3>
+                    <ul>
+                        <li><strong>🔼 Más de 52.5 (Total 1er Cuarto)</strong><br>
+                            Se apuesta a que habrá 53 o más puntos totales en el primer cuarto.
+                            <div class="ejemplo">
+                                <strong>Ejemplo:</strong> 1er cuarto: 28-27 = 55 puntos → apuesta ganadora.
+                            </div>
+                        </li>
+                        <li><strong>🔽 Menos de 52.5 (Total 1er Cuarto)</strong><br>
+                            Se apuesta a que habrá 52 o menos puntos totales en el primer cuarto.
+                            <div class="ejemplo">
+                                <strong>Ejemplo:</strong> 1er cuarto: 24-22 = 46 puntos → apuesta ganadora.
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
         </div>
 
         <a href="index.html" class="volver-btn">
             <i class="fas fa-arrow-left"></i> Volver a Apuestas
         </a>
     </div>
+
+    <script>
+        function showTab(tabName) {
+            // Ocultar todas las pestañas
+            const allTabs = document.querySelectorAll('.tab-content');
+            allTabs.forEach(tab => tab.classList.remove('active'));
+            
+            // Desactivar todos los botones
+            const allButtons = document.querySelectorAll('.tab-button');
+            allButtons.forEach(button => button.classList.remove('active'));
+            
+            // Mostrar la pestaña seleccionada
+            document.getElementById(tabName).classList.add('active');
+            
+            // Activar el botón correspondiente
+            event.target.classList.add('active');
+        }
+        
+        // Script para mejorar el zoom móvil (igual que en index.html)
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('💡 Zoom habilitado: Usa dos dedos para pellizcar y hacer zoom.');
+        });
+    </script>
 </body>
 </html>

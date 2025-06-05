@@ -65,13 +65,31 @@ class CartManager {    constructor() {
         
         // Actualizar badge del carrito
         this.updateCartBadge();
-    }
-
-    updateBetAmount(index, amount) {
+    }    updateBetAmount(index, amount) {
         if (this.items[index]) {
             const newAmount = parseFloat(amount) || 0;
+            
+            // Validación de monto mínimo y máximo para apuestas individuales
             if (newAmount < 0) {
                 this.showNotification('El monto debe ser mayor a 0', 'error');
+                return;
+            }
+            
+            if (newAmount > 0 && newAmount < 500) {
+                this.showNotification('El monto mínimo para apuestas individuales es $500', 'error');
+                // Limpiar el campo
+                this.items[index].betAmount = 0;
+                this.saveCart();
+                this.updateCartDisplay();
+                return;
+            }
+            
+            if (newAmount > 15000) {
+                this.showNotification('El monto máximo para apuestas individuales es $15,000', 'error');
+                // Limpiar el campo
+                this.items[index].betAmount = 0;
+                this.saveCart();
+                this.updateCartDisplay();
                 return;
             }
             
@@ -1070,14 +1088,32 @@ class CartManager {    constructor() {
         this.combinationMode = false;
         this.saveCart();
         this.updateCartDisplay();        this.showNotification(`✅ Combo creado! ${selectedItems.length} apuestas con cuota ${combination.combinedOdds.toFixed(2)}`);
-    }
-
-    updateCombinationAmount(combinationId, amount) {
+    }    updateCombinationAmount(combinationId, amount) {
         const combination = this.combinations.find(c => c.id === combinationId);
         if (combination) {
             const newAmount = parseFloat(amount) || 0;
+            
+            // Validación de monto mínimo y máximo para apuestas combinadas
             if (newAmount < 0) {
                 this.showNotification('El monto debe ser mayor a 0', 'error');
+                return;
+            }
+            
+            if (newAmount > 0 && newAmount < 500) {
+                this.showNotification('El monto mínimo para apuestas combinadas es $500', 'error');
+                // Limpiar el campo
+                combination.betAmount = 0;
+                this.saveCart();
+                this.updateCartDisplay();
+                return;
+            }
+            
+            if (newAmount > 5000) {
+                this.showNotification('El monto máximo para apuestas combinadas es $5,000', 'error');
+                // Limpiar el campo
+                combination.betAmount = 0;
+                this.saveCart();
+                this.updateCartDisplay();
                 return;
             }
             
@@ -1171,14 +1207,14 @@ class CartManager {    constructor() {
                         <div class="item-bet">
                             <span class="bet-type">${item.tipoLabel}</span>
                             <span class="bet-odds">@ ${item.cuota}</span>
-                        </div>
-                        <div class="item-amount">
+                        </div>                        <div class="item-amount">
                             <label>Monto: $</label>
                             <input type="number" 
                                 value="${item.betAmount || ''}" 
-                                min="0" 
-                                step="0.01" 
-                                placeholder="0.00"
+                                min="500" 
+                                max="15000"
+                                step="1" 
+                                placeholder="500 - 15000"
                                 onchange="cartManager.updateBetAmount(${originalIndex}, this.value)"
                             >
                         </div>
@@ -1203,14 +1239,14 @@ class CartManager {    constructor() {
                         </div>
                         <div class="combination-odds">
                             <strong>Cuota combinada: ${combination.combinedOdds.toFixed(2)}</strong>
-                        </div>
-                        <div class="combination-amount">
+                        </div>                        <div class="combination-amount">
                             <label>Monto: $</label>
                             <input type="number" 
                                 value="${combination.betAmount || ''}" 
-                                min="0" 
-                                step="0.01" 
-                                placeholder="0.00"
+                                min="500" 
+                                max="5000"
+                                step="1" 
+                                placeholder="500 - 5000"
                                 onchange="cartManager.updateCombinationAmount('${combination.id}', this.value)"
                             >
                             <div class="potential-win">
@@ -1300,19 +1336,31 @@ class CartManager {    constructor() {
         const individualItems = this.items.filter(item => !item.combinationId);
         const hasCombinations = this.combinations.length > 0;
         
-        if (individualItems.length === 0 && !hasCombinations) return '';
-
-        // Verificar que todas las apuestas individuales tengan monto
+        if (individualItems.length === 0 && !hasCombinations) return '';        // Verificar que todas las apuestas individuales tengan monto válido
         const invalidBets = individualItems.filter(item => !item.betAmount || item.betAmount <= 0);
         if (invalidBets.length > 0) {
             this.showNotification('Todas las apuestas individuales deben tener un monto válido', 'error');
             return '';
         }
 
-        // Verificar que todas las combinaciones tengan monto
+        // Verificar límites de apuestas individuales (500-15000)
+        const invalidIndividualAmounts = individualItems.filter(item => item.betAmount < 500 || item.betAmount > 15000);
+        if (invalidIndividualAmounts.length > 0) {
+            this.showNotification('Las apuestas individuales deben ser entre $500 y $15,000', 'error');
+            return '';
+        }
+
+        // Verificar que todas las combinaciones tengan monto válido
         const invalidCombinations = this.combinations.filter(combination => !combination.betAmount || combination.betAmount <= 0);
         if (invalidCombinations.length > 0) {
             this.showNotification('Todas las combinaciones deben tener un monto válido', 'error');
+            return '';
+        }
+
+        // Verificar límites de apuestas combinadas (500-5000)
+        const invalidCombinationAmounts = this.combinations.filter(combination => combination.betAmount < 500 || combination.betAmount > 5000);
+        if (invalidCombinationAmounts.length > 0) {
+            this.showNotification('Las apuestas combinadas deben ser entre $500 y $5,000', 'error');
             return '';
         }
 
