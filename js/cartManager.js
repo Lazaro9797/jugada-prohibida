@@ -1059,11 +1059,10 @@ class CartManager {    constructor() {
         // Add logs to see what we're working with
         console.log('Creating combination with selected items:', selectedItems);
         console.log('Selected item cuotas:', selectedItems.map(item => item.cuota));
-        
-        const combination = {
+          const combination = {
             id: combinationId,
             items: selectedItems.map(item => ({...item})),
-            combinedOdds: selectedItems.reduce((total, item) => total + item.cuota, 0),
+            combinedOdds: selectedItems.reduce((total, item) => total * item.cuota, 1),
             betAmount: 0,
             timestamp: Date.now()
         };
